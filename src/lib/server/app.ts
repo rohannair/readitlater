@@ -14,9 +14,10 @@ export type AppType = typeof app;
 app.use(logger());
 
 app
-	.get("/", (c) => {
-		return c.text("Hello Hono!");
-	})
+	.get("/", (c) => c.text("Hello World!"))
+	.get("/health", (c) =>
+		c.json({ message: "Healthy", uptime: process.uptime() }),
+	)
 	.post("/url", zValidator("json", urlSchema), async (c) => {
 		const { url } = c.req.valid("json");
 		const { id } = await queueScrape({ url });
