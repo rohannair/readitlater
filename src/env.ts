@@ -3,6 +3,7 @@ import { z } from 'zod'
 export const envSchema = z.object({
   PORT: z.string().default('3000'),
   NODE_ENV: z.string().default('development'),
+  DB_URL: z.string().optional(),
   DB_PASSWORD: z.string(),
   NEXT_PUBLIC_SUPABASE_URL: z.string(),
   NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string(),
