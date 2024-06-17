@@ -1,6 +1,6 @@
 'use client'
 
-import { createUser } from '@/app/auth/_forms/createUser'
+import { createUser } from '@/lib/api/calls/createUser'
 import { FormInput } from '@/app/auth/_forms/form-input'
 import { Button } from '@/components/ui/button'
 import { useForm } from '@conform-to/react'

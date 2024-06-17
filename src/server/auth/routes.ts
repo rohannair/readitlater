@@ -12,10 +12,9 @@ import { Hono } from 'hono'
 import { getCookie, setCookie } from 'hono/cookie'
 import { z } from 'zod'
 
-const authRouter = new Hono()
-
 const registerSchema = insertUserSchema
   .omit({
+    id: true,
     passwordHash: true,
   })
   .extend({
@@ -23,8 +22,8 @@ const registerSchema = insertUserSchema
     password: z.string().min(8),
   })
 
-authRouter
-  .get('/login', zValidator('json', registerSchema), async (c) => {
+const authRouter = new Hono()
+  .post('/login', zValidator('json', registerSchema), async (c) => {
     const { email, password } = c.req.valid('json')
     const { user, cookie } = await login(email, password)
 
@@ -40,7 +39,7 @@ authRouter
     setCookie(c, cookie.name, cookie.value, cookie.attributes)
     return c.json({ message: 'Logged out' })
   })
-  .get('/register', zValidator('json', registerSchema), async (c) => {
+  .post('/register', zValidator('json', registerSchema), async (c) => {
     const { email, password } = c.req.valid('json')
 
     const existingUser = await getUserByEmail(email)
