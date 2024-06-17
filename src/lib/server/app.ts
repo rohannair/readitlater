@@ -1,8 +1,8 @@
-import { verifySession } from './_middleware/verifySession'
+import { zValidator } from '@hono/zod-validator'
 import { Hono } from 'hono'
 import { logger } from 'hono/logger'
 import { z } from 'zod'
-import { zValidator } from '@hono/zod-validator'
+import { verifySession } from './_middleware/verifySession'
 import { queueScrape } from './scraper/queueScrape'
 
 import { authRouter } from './auth'

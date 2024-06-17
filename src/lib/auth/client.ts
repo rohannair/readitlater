@@ -1,7 +1,7 @@
-import { Lucia } from 'lucia'
-import { DrizzlePostgreSQLAdapter } from '@lucia-auth/adapter-drizzle'
-import { db, users, sessions } from '@/lib/db'
 import { env } from '@/env'
+import { db, sessions, users } from '@/lib/db'
+import { DrizzlePostgreSQLAdapter } from '@lucia-auth/adapter-drizzle'
+import { Lucia } from 'lucia'
 
 interface DatabaseUserAttributes {
   email: string

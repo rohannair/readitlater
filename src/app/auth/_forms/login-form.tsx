@@ -39,11 +39,7 @@ async function submitLogin(_prevState: unknown, formData: FormData) {
     return result.reply()
   }
 
-  const res = await createUser(result.value)
-  if (res.status === 'error') {
-    return res.reply()
-  }
-  const data = res.json()
+  const data = await createUser(result.value)
   console.log('LOGIN', data)
 
   redirect(result.value.redirect)

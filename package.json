@@ -4,9 +4,9 @@
   "private": true,
   "scripts": {
     "lint": "biome check src/",
-    "lint:fix": "biome check --apply src/",
-    "format": "biome format .",
-    "format:fix": "biome format --write .",
+    "lint:fix": "biome check --write src/",
+    "format": "biome format src/",
+    "format:fix": "biome format --write src/",
     "------------------- BUILD -------------------": "",
     "dev": "infisical run -- next dev",
     "build": "infisical run -- next build",
@@ -61,5 +61,8 @@
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
   },
-  "packageManager": "bun@1.1.12"
+  "engines": {
+    "bun": "^1.1.12"
+  },
+  "packageManager": "yarn@1.22.22"
 }

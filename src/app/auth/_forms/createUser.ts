@@ -8,8 +8,16 @@ export const createUser = async (params: {
   password: string
 }) => {
   // @ts-ignore
-  const { data } = await client.users.$post({
+  const res = await client.users.$post({
     body: params,
   })
-  return data
+
+  if (!res.ok) {
+    return {
+      status: 'error',
+      data: await res.json(),
+    }
+  }
+
+  return await res.json()
 }

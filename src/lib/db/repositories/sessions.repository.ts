@@ -1,8 +1,8 @@
 import {
   db,
-  sessions,
   insertSessionSchema,
   type selectSessionSchema,
+  sessions,
 } from '@/lib/db'
 import { createId } from '@paralleldrive/cuid2'
 import { eq } from 'drizzle-orm'

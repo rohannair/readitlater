@@ -1,6 +1,6 @@
-import { pgTable, varchar, timestamp } from 'drizzle-orm/pg-core'
-import { createInsertSchema, createSelectSchema } from 'drizzle-zod'
 import { users } from '@/lib/db/schema/users'
+import { pgTable, timestamp, varchar } from 'drizzle-orm/pg-core'
+import { createInsertSchema, createSelectSchema } from 'drizzle-zod'
 
 export const sessions = pgTable('sessions', {
   id: varchar('id', {
