@@ -1,6 +1,7 @@
 import { handle } from 'hono/vercel'
-
 import { app } from '@/lib/server'
+
+// export const runtime = 'edge'
 
 export const OPTIONS = handle(app)
 export const GET = handle(app)

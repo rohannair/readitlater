@@ -1,26 +1,39 @@
 import { lucia } from '@/lib/auth'
 import type { Context, Next } from 'hono'
-import { getCookie, setCookie } from 'hono/cookie'
+import { getCookie } from 'hono/cookie'
 import { createMiddleware } from 'hono/factory'
 
 export const verifySession = createMiddleware(
   async (c: Context, next: Next) => {
-    const sessionId = getCookie(c, lucia.sessionCookieName)
+    const sessionId = getCookie(c, lucia.sessionCookieName) ?? null
 
     if (!sessionId) {
+      c.set('session', null)
+      c.set('user', null)
       return c.json({ message: 'Not logged in' }, 401)
     }
 
-    const result = await lucia.validateSession(sessionId)
+    const { session, user } = await lucia.validateSession(sessionId)
 
-    const cookie = result.session
-      ? lucia.createSessionCookie(result.session.id)
-      : lucia.createBlankSessionCookie()
+    if (session?.fresh) {
+      c.header(
+        'Set-Cookie',
+        lucia.createSessionCookie(session.id).serialize(),
+        {
+          append: true,
+        },
+      )
+    }
 
-    setCookie(c, cookie.name, cookie.value, cookie.attributes)
+    if (!session) {
+      c.header('Set-Cookie', lucia.createBlankSessionCookie().serialize(), {
+        append: true,
+      })
+    }
 
-    c.set('session', result.session)
+    c.set('user', user)
+    c.set('session', session)
 
-    await next()
+    return next()
   },
 )
