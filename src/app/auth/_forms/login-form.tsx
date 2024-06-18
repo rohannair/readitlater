@@ -1,8 +1,8 @@
 'use client'
 
-import { createUser } from '@/lib/api/calls/createUser'
 import { FormInput } from '@/app/auth/_forms/form-input'
 import { Button } from '@/components/ui/button'
+import { createUser } from '@/lib/api/calls/createUser'
 import { useForm } from '@conform-to/react'
 import { parseWithZod } from '@conform-to/zod'
 import { redirect } from 'next/navigation'
@@ -39,8 +39,7 @@ async function submitLogin(_prevState: unknown, formData: FormData) {
     return result.reply()
   }
 
-  const data = await createUser(result.value)
-  console.log('LOGIN', data)
+  const _data = await createUser(result.value)
 
   redirect(result.value.redirect)
 }

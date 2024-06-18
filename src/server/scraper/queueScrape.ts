@@ -1,7 +1,6 @@
 import { toMarkdown } from '@/lib/markdown/toMarkdown'
 import * as cheerio from 'cheerio'
 import sanitizeHtml from 'sanitize-html'
-import TurndownService from 'turndown'
 
 interface QueueScrape {
   url: string
@@ -17,7 +16,6 @@ function isValidUrl(urlString: string): boolean {
 }
 
 export async function queueScrape(input: QueueScrape) {
-  console.log('Queueing scrape')
   try {
     if (!isValidUrl(input.url)) {
       throw new Error('Invalid URL')
