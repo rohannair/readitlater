@@ -1,3 +1,5 @@
+import { linksUsers } from '@/lib/db/schema/linksUsers'
+import { relations } from 'drizzle-orm'
 import { pgTable, timestamp, varchar } from 'drizzle-orm/pg-core'
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod'
 
@@ -14,6 +16,10 @@ export const users = pgTable('users', {
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 })
+
+export const usersRelations = relations(users, ({ many }) => ({
+  links: many(linksUsers),
+}))
 
 export const insertUserSchema = createInsertSchema(users)
 export const selectUserSchema = createSelectSchema(users)
