@@ -1,7 +1,7 @@
 import { lucia } from '@/lib/auth'
 import { verify } from '@/lib/crypto'
 import { db, insertUserSchema, type selectUserSchema, users } from '@/lib/db'
-import { eq } from 'drizzle-orm'
+import { eq, like } from 'drizzle-orm'
 import { HTTPException } from 'hono/http-exception'
 import { type Cookie, generateIdFromEntropySize } from 'lucia'
 import type { z } from 'zod'
@@ -12,67 +12,99 @@ type UserResponse = {
   user: Partial<User>
   cookie: Cookie
 }
-
-export const getUserByEmail = async (email: string): Promise<User | null> => {
-  const [user] = await db.select().from(users).where(eq(users.email, email))
-
-  return user
+interface UserRepository {
+  getUserByEmail(email: string): Promise<User | null>
+  getUserById(id: string): Promise<User | null>
+  createUser(params: Omit<CreateUser, 'id'>): Promise<UserResponse>
+  updateUser(
+    id: string,
+    params: Partial<Omit<User, 'id'>>,
+  ): Promise<User | null>
+  searchByEmail(emailPattern: string): Promise<Partial<User>[]>
+  login(email: string, password: string): Promise<UserResponse>
+  logout(sessionId: string): Promise<{ user: null; cookie: Cookie }>
 }
 
-export const createUser = async (
-  params: Omit<CreateUser, 'id'>,
-): Promise<UserResponse> => {
-  const values = insertUserSchema.safeParse({
-    ...params,
-    id: generateIdFromEntropySize(10),
-  })
+const createUserRepository = (): UserRepository => ({
+  async getUserByEmail(email: string): Promise<User | null> {
+    const [user] = await db.select().from(users).where(eq(users.email, email))
+    return user || null
+  },
 
-  if (!values.success) {
-    throw new Error('Invalid data')
-  }
+  async getUserById(id: string): Promise<User | null> {
+    const [user] = await db.select().from(users).where(eq(users.id, id))
+    return user || null
+  },
 
-  const [user] = await db.insert(users).values(values.data).returning({
-    id: users.id,
-    email: users.email,
-  })
+  async createUser(params: Omit<CreateUser, 'id'>): Promise<UserResponse> {
+    const values = insertUserSchema.safeParse({
+      ...params,
+      id: generateIdFromEntropySize(10),
+    })
 
-  const session = await lucia.createSession(user.id, {})
-  const cookie = lucia.createSessionCookie(session.id)
+    if (!values.success) {
+      throw new Error('Invalid data')
+    }
 
-  return { user, cookie }
-}
+    const [user] = await db.insert(users).values(values.data).returning({
+      id: users.id,
+      email: users.email,
+    })
 
-export const login = async (
-  email: string,
-  password: string,
-): Promise<UserResponse> => {
-  const user = await getUserByEmail(email)
+    const session = await lucia.createSession(user.id, {})
+    const cookie = lucia.createSessionCookie(session.id)
 
-  if (!user) {
-    throw new HTTPException(401, { message: 'Login failed' })
-  }
+    return { user, cookie }
+  },
 
-  const validPassword = await verify(password, user.passwordHash)
+  async updateUser(
+    id: string,
+    params: Partial<Omit<User, 'id'>>,
+  ): Promise<User | null> {
+    const [updatedUser] = await db
+      .update(users)
+      .set({ ...params, updatedAt: new Date() })
+      .where(eq(users.id, id))
+      .returning()
 
-  if (!validPassword) {
-    throw new HTTPException(401, { message: 'Login failed' })
-  }
+    return updatedUser || null
+  },
 
-  const session = await lucia.createSession(user.id, {})
-  const cookie = lucia.createSessionCookie(session.id)
+  async searchByEmail(emailPattern: string): Promise<Partial<User>[]> {
+    return await db
+      .select({
+        id: users.id,
+        email: users.email,
+        createdAt: users.createdAt,
+      })
+      .from(users)
+      .where(like(users.email, `%${emailPattern}%`))
+  },
 
-  return { user, cookie }
-}
+  async login(email: string, password: string): Promise<UserResponse> {
+    const user = await this.getUserByEmail(email)
 
-export const logout = async (
-  sessionId: string,
-): Promise<{
-  user: null
-  cookie: Cookie
-}> => {
-  await lucia.invalidateSession(sessionId)
+    if (!user) {
+      throw new HTTPException(401, { message: 'Login failed' })
+    }
 
-  const cookie = lucia.createBlankSessionCookie()
+    const validPassword = await verify(password, user.passwordHash)
 
-  return { user: null, cookie }
-}
+    if (!validPassword) {
+      throw new HTTPException(401, { message: 'Login failed' })
+    }
+
+    const session = await lucia.createSession(user.id, {})
+    const cookie = lucia.createSessionCookie(session.id)
+
+    return { user, cookie }
+  },
+
+  async logout(sessionId: string): Promise<{ user: null; cookie: Cookie }> {
+    await lucia.invalidateSession(sessionId)
+    const cookie = lucia.createBlankSessionCookie()
+    return { user: null, cookie }
+  },
+})
+
+export const userRepository = createUserRepository()

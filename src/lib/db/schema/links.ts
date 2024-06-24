@@ -11,6 +11,10 @@ export const links = pgTable('links', {
   url: varchar('url', {
     length: 255,
   }).unique(),
+  title: varchar('title', {
+    length: 255,
+  }),
+  cleaned: text('cleaned'),
   summary: text('summary'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),

@@ -31,6 +31,7 @@
     "@radix-ui/react-switch": "^1.0.3",
     "@radix-ui/react-tabs": "^1.0.4",
     "@radix-ui/react-tooltip": "^1.0.7",
+    "@t3-oss/env-nextjs": "^0.10.1",
     "@trigger.dev/sdk": "3.0.0-beta.39",
     "ai": "^3.1.36",
     "cheerio": "^1.0.0-rc.12",
@@ -74,5 +75,9 @@
   "engines": {
     "bun": "^1.1.12"
   },
-  "packageManager": "npm@10.8.1"
+  "packageManager": "npm@10.8.1",
+  "trustedDependencies": [
+    "@biomejs/biome",
+    "protobufjs"
+  ]
 }

@@ -5,34 +5,57 @@ import {
   sessions,
 } from '@/lib/db'
 import { createId } from '@paralleldrive/cuid2'
-import { eq } from 'drizzle-orm'
+import { eq, lte } from 'drizzle-orm'
 
 import type { z } from 'zod'
 
 type Session = z.infer<typeof selectSessionSchema>
 type CreateSession = z.infer<typeof insertSessionSchema>
-
-export const getSessionById = async (id: string): Promise<Session | null> => {
-  const [session] = await db.select().from(sessions).where(eq(sessions.id, id))
-
-  return session
+interface SessionRepository {
+  getSessionById(id: string): Promise<Session | null>
+  createSession(params: Omit<CreateSession, 'id'>): Promise<Partial<Session>>
+  deleteSession(id: string): Promise<void>
+  deleteExpiredSessions(): Promise<void>
 }
 
-export const createSession = async (params: Omit<CreateSession, 'id'>) => {
-  const values = insertSessionSchema.safeParse({
-    ...params,
-    id: createId(),
-  })
+const createSessionRepository = (): SessionRepository => ({
+  async getSessionById(id: string): Promise<Session | null> {
+    const [session] = await db
+      .select()
+      .from(sessions)
+      .where(eq(sessions.id, id))
+    return session || null
+  },
 
-  if (!values.success) {
-    throw new Error('Invalid data')
-  }
+  async createSession(
+    params: Omit<CreateSession, 'id'>,
+  ): Promise<Partial<Session>> {
+    const values = insertSessionSchema.safeParse({
+      ...params,
+      id: createId(),
+    })
 
-  const [session] = await db.insert(sessions).values(values.data).returning({
-    id: sessions.id,
-    userId: sessions.userId,
-    expiresAt: sessions.expiresAt,
-  })
+    if (!values.success) {
+      throw new Error('Invalid data')
+    }
 
-  return session
-}
+    const [session] = await db.insert(sessions).values(values.data).returning({
+      id: sessions.id,
+      userId: sessions.userId,
+      expiresAt: sessions.expiresAt,
+    })
+
+    return session
+  },
+
+  async deleteSession(id: string): Promise<void> {
+    await db.delete(sessions).where(eq(sessions.id, id))
+  },
+
+  async deleteExpiredSessions(): Promise<void> {
+    const now = new Date()
+    await db.delete(sessions).where(lte(sessions.expiresAt, now))
+  },
+})
+
+export const sessionRepository = createSessionRepository()

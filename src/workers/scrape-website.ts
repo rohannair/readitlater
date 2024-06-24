@@ -1,10 +1,13 @@
+import { linkRepository } from '@/lib/db/repositories/links.repository'
 import { toMarkdown } from '@/lib/markdown/toMarkdown'
+import { fetchSite, getMainContent } from '@/lib/scraper'
+import { sanitizeHtml } from '@/lib/url'
 import { task } from '@trigger.dev/sdk/v3'
 import * as cheerio from 'cheerio'
-import sanitizeHtml from 'sanitize-html'
 
 interface ScrapeWebsiteParams {
   url: string
+  link: string
 }
 
 export const scrapeWebsite = task({
@@ -15,38 +18,21 @@ export const scrapeWebsite = task({
   },
 })
 
-export async function scrape({ url }: ScrapeWebsiteParams) {
-  const resp = await fetch(url, {
-    headers: { contentType: 'text/html' },
-  })
-
-  if (!resp.ok) {
-    throw new Error('Failed to fetch')
-  }
-
-  const body = await resp.text()
+export async function scrape({ url, link }: ScrapeWebsiteParams) {
+  const body = await fetchSite(url)
   const $ = cheerio.load(body)
 
   // Extract the main content (this can be adapted based on the structure of the target websites)
-  const mainContent = $('main').length ? $('main').html() : $('body').html()
+  const mainContent = getMainContent($)
 
   if (!mainContent) {
     throw new Error('No main content found')
   }
 
-  // Sanitize HTML
-  const cleanHtml = sanitizeHtml(mainContent, {
-    allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img']),
-    allowedAttributes: {
-      a: ['href', 'name', 'target'],
-      img: ['src', 'alt'],
-    },
+  await linkRepository.updateLink({
+    id: link,
+    body: toMarkdown(sanitizeHtml(mainContent)),
+    title: $('title').text(),
+    summary: $('meta[name="description"]').attr('content') ?? '',
   })
-
-  const markdown = toMarkdown(cleanHtml)
-
-  return {
-    url,
-    markdown: markdown.replace(/\\n/g, '\n'),
-  }
 }
