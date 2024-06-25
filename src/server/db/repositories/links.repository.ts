@@ -1,5 +1,5 @@
-import { db } from '@/lib/db/client'
-import { type Link, links, linksUsers, users } from '@/lib/db/schema'
+import { db } from '@/server/db/client'
+import { type Link, links, linksUsers, users } from '@/server/db/schema'
 import { createId } from '@paralleldrive/cuid2'
 import { and, eq } from 'drizzle-orm'
 

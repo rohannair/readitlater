@@ -2,7 +2,7 @@ import { client } from '../client'
 
 export async function getUser() {
   try {
-    const response = await client.api.auth.me.$get()
+    const response = await client.auth.me.$get()
 
     if (!response.ok) {
       console.error('Failed to fetch user:', response)

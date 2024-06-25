@@ -1,5 +1,5 @@
-import { links } from '@/lib/db/schema/links'
-import { users } from '@/lib/db/schema/users'
+import { links } from '@/server/db/schema/links'
+import { users } from '@/server/db/schema/users'
 import { relations } from 'drizzle-orm'
 import { pgTable, primaryKey, varchar } from 'drizzle-orm/pg-core'
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod'

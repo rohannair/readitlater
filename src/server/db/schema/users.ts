@@ -1,4 +1,4 @@
-import { linksUsers } from '@/lib/db/schema/linksUsers'
+import { linksUsers } from '@/server/db/schema/linksUsers'
 import { relations } from 'drizzle-orm'
 import { pgTable, timestamp, varchar } from 'drizzle-orm/pg-core'
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod'

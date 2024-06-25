@@ -1,5 +1,5 @@
 import { env } from '@/env'
-import { db, sessions, users } from '@/lib/db'
+import { db, sessions, users } from '@/server/db'
 import { DrizzlePostgreSQLAdapter } from '@lucia-auth/adapter-drizzle'
 import { Lucia } from 'lucia'
 

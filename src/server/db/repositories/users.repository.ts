@@ -1,6 +1,6 @@
 import { lucia } from '@/lib/auth'
 import { verify } from '@/lib/crypto'
-import { db, insertUserSchema, type selectUserSchema, users } from '@/lib/db'
+import { db, insertUserSchema, type selectUserSchema, users } from '@/server/db'
 import { eq, like } from 'drizzle-orm'
 import { HTTPException } from 'hono/http-exception'
 import { type Cookie, generateIdFromEntropySize } from 'lucia'
@@ -13,7 +13,7 @@ type UserResponse = {
   cookie: Cookie
 }
 interface UserRepository {
-  getUserByEmail(email: string): Promise<User | null>
+  getUserByEmail(email: string): Promise<User>
   getUserById(id: string): Promise<User | null>
   createUser(params: Omit<CreateUser, 'id'>): Promise<UserResponse>
   updateUser(
@@ -26,9 +26,9 @@ interface UserRepository {
 }
 
 const createUserRepository = (): UserRepository => ({
-  async getUserByEmail(email: string): Promise<User | null> {
+  async getUserByEmail(email: string): Promise<User> {
     const [user] = await db.select().from(users).where(eq(users.email, email))
-    return user || null
+    return user
   },
 
   async getUserById(id: string): Promise<User | null> {
@@ -82,13 +82,13 @@ const createUserRepository = (): UserRepository => ({
   },
 
   async login(email: string, password: string): Promise<UserResponse> {
-    const user = await this.getUserByEmail(email)
+    const { passwordHash, ...user } = await this.getUserByEmail(email)
 
     if (!user) {
       throw new HTTPException(401, { message: 'Login failed' })
     }
 
-    const validPassword = await verify(password, user.passwordHash)
+    const validPassword = await verify(password, passwordHash)
 
     if (!validPassword) {
       throw new HTTPException(401, { message: 'Login failed' })

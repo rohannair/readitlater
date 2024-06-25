@@ -1,7 +1,7 @@
-import { linkRepository } from '@/lib/db/repositories/links.repository'
 import { toMarkdown } from '@/lib/markdown/toMarkdown'
 import { fetchSite, getMainContent } from '@/lib/scraper'
 import { sanitizeHtml } from '@/lib/url'
+import { linkRepository } from '@/server/db/repositories/links.repository'
 import { task } from '@trigger.dev/sdk/v3'
 import * as cheerio from 'cheerio'
 

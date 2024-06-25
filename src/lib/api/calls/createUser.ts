@@ -4,7 +4,7 @@ export const createUser = async (json: {
   email: string
   password: string
 }) => {
-  const res = await client.api.auth.register.$post({
+  const res = await client.auth.register.$post({
     json,
   })
 
