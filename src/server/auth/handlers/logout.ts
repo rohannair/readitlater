@@ -1,5 +1,5 @@
 import { lucia } from '@/lib/auth'
-import { userRepository } from '@/lib/db/repositories/users.repository'
+import { userRepository } from '@/server/db/repositories/users.repository'
 import type { Env } from '@/server/types'
 import { OpenAPIHono, createRoute } from '@hono/zod-openapi'
 import { getCookie, setCookie } from 'hono/cookie'

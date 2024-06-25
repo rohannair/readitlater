@@ -1,6 +1,6 @@
 import { hash } from '@/lib/crypto'
-import { insertUserSchema } from '@/lib/db'
-import { userRepository } from '@/lib/db/repositories/users.repository'
+import { insertUserSchema } from '@/server/db'
+import { userRepository } from '@/server/db/repositories/users.repository'
 import type { Env } from '@/server/types'
 import { OpenAPIHono, createRoute, z } from '@hono/zod-openapi'
 import { setCookie } from 'hono/cookie'

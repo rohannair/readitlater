@@ -3,7 +3,7 @@ import {
   insertSessionSchema,
   type selectSessionSchema,
   sessions,
-} from '@/lib/db'
+} from '@/server/db'
 import { createId } from '@paralleldrive/cuid2'
 import { eq, lte } from 'drizzle-orm'
 

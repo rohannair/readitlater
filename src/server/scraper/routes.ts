@@ -1,9 +1,9 @@
-import { linkRepository } from '@/lib/db/repositories/links.repository'
 import { verifySession } from '@/server/_middleware/verifySession'
+import { linkRepository } from '@/server/db/repositories/links.repository'
 import { queueScrape } from '@/server/scraper/queueScrape'
 import type { Env } from '@/server/types'
-import { zValidator } from '@hono/zod-validator'
 import { OpenAPIHono as Hono } from '@hono/zod-openapi'
+import { zValidator } from '@hono/zod-validator'
 import { z } from 'zod'
 
 const urlSchema = z.object({

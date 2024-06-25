@@ -1,4 +1,4 @@
-import { users } from '@/lib/db/schema/users'
+import { users } from '@/server/db/schema/users'
 import { pgTable, timestamp, varchar } from 'drizzle-orm/pg-core'
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod'
 
