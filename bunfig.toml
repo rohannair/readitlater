@@ -1,0 +1,5 @@
+# Reduce memory usage at the cost of performance
+smol = true
+
+[define]
+"process.env.NODE_ENV" = "development"

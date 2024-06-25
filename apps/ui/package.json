@@ -1,0 +1,70 @@
+{
+  "name": "readitlater",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "------------------- LINT -------------------": "",
+    "lint": "biome check src/",
+    "lint:fix": "biome check --write src/",
+    "format": "biome format src/",
+    "format:fix": "biome format --write src/",
+    "------------------- BUILD -------------------": "",
+    "dev": "infisical run -- next dev",
+    "build": "infisical run -- next build",
+    "start": "infisical run -- next start"
+  },
+  "dependencies": {
+    "@conform-to/react": "^1.1.4",
+    "@conform-to/zod": "^1.1.4",
+    "@paralleldrive/cuid2": "^2.2.2",
+    "@radix-ui/react-alert-dialog": "^1.0.5",
+    "@radix-ui/react-aspect-ratio": "^1.0.3",
+    "@radix-ui/react-avatar": "^1.0.4",
+    "@radix-ui/react-checkbox": "^1.0.4",
+    "@radix-ui/react-label": "^2.0.2",
+    "@radix-ui/react-radio-group": "^1.1.3",
+    "@radix-ui/react-select": "^2.0.0",
+    "@radix-ui/react-slot": "^1.0.2",
+    "@radix-ui/react-switch": "^1.0.3",
+    "@radix-ui/react-tabs": "^1.0.4",
+    "@radix-ui/react-tooltip": "^1.0.7",
+    "@t3-oss/env-nextjs": "^0.10.1",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.1",
+    "date-fns": "^3.6.0",
+    "lucide-react": "^0.395.0",
+    "marked": "^13.0.0",
+    "next": "14.2.3",
+    "next-themes": "^0.3.0",
+    "react": "^18",
+    "react-day-picker": "^8.10.1",
+    "react-dom": "^18",
+    "sanitize-html": "^2.13.0",
+    "set-cookie-parser": "^2.6.0",
+    "sonner": "^1.5.0",
+    "tailwind-merge": "^2.3.0",
+    "tailwindcss-animate": "^1.0.7",
+    "turndown": "^7.2.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.8.0",
+    "@types/bun": "^1.1.3",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "@types/sanitize-html": "^2.11.0",
+    "@types/set-cookie-parser": "^2.4.9",
+    "@types/turndown": "^5.0.4",
+    "postcss": "^8",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5"
+  },
+  "engines": {
+    "bun": "^1.1.12"
+  },
+  "packageManager": "npm@10.8.1",
+  "trustedDependencies": [
+    "@biomejs/biome",
+    "protobufjs"
+  ]
+}
