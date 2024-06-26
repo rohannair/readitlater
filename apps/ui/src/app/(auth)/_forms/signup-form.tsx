@@ -1,9 +1,8 @@
 'use client'
 
-import { FormInput } from '@/app/auth/_forms/form-input'
+import { FormInput } from '@/app/(auth)/_forms/form-input'
 import { Button } from '@/components/ui/button'
 import { createUser } from '@/lib/api/calls/createUser'
-import { login } from '@/lib/api/calls/login'
 import { useForm } from '@conform-to/react'
 import { parseWithZod } from '@conform-to/zod'
 import { redirect } from 'next/navigation'
@@ -11,7 +10,7 @@ import { useFormState } from 'react-dom'
 import { z } from 'zod'
 
 const MIN_PASSWORD_LENGTH = 5
-const loginSchema = z.object({
+const createUserSchema = z.object({
   email: z.preprocess(
     (value) => (value === '' ? undefined : value),
     z
@@ -30,10 +29,10 @@ const loginSchema = z.object({
 })
 
 const parseData = (formData: FormData) => {
-  return parseWithZod(formData, { schema: loginSchema })
+  return parseWithZod(formData, { schema: createUserSchema })
 }
 
-async function submitLogin(_prevState: unknown, formData: FormData) {
+async function submitCreateUser(_prevState: unknown, formData: FormData) {
   const result = parseData(formData)
 
   if (result.status !== 'success') {
@@ -42,18 +41,17 @@ async function submitLogin(_prevState: unknown, formData: FormData) {
 
   const { redirect: redirectUrl, ...value } = result.value
 
-  const data = await login(value)
-  console.log('data:', data)
+  await createUser(value)
 
   redirect(redirectUrl)
 }
 
-export function LoginForm({
+export function SignupForm({
   redirect,
 }: {
   redirect: string
 }) {
-  const [lastResult, action] = useFormState(submitLogin, undefined)
+  const [lastResult, action] = useFormState(submitCreateUser, undefined)
   const [form, fields] = useForm({
     // Sync the result of last submission
     lastResult,
@@ -87,7 +85,6 @@ export function LoginForm({
           // key={fields.password.key}
           name={fields.password.name}
           type="password"
-          placeholder="••••••••••••"
           errors={fields.password.errors}
         >
           Password
@@ -95,10 +92,7 @@ export function LoginForm({
         <input type="hidden" name="redirect" value={redirect} />
 
         <div className="flex justify-between">
-          <Button variant="link" size="sm">
-            Forgot password?
-          </Button>
-          <Button type="submit">Login</Button>
+          <Button type="submit">Signup</Button>
         </div>
       </div>
     </form>

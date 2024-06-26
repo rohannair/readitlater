@@ -1,5 +1,5 @@
 {
-  "name": "api",
+  "name": "@readitlater/api",
   "module": "src/server.ts",
   "type": "module",
   "scripts": {
@@ -9,7 +9,7 @@
     "format": "biome format src/",
     "format:fix": "biome format --write src/",
     "------------------- DEV -------------------": "",
-    "dev": "infisical run -- bun run src/server.ts",
+    "dev": "infisical run -- bun run --watch src/server.ts",
     "------------------- DB -------------------": "",
     "db:generate": "infisical run -- bun drizzle-kit generate",
     "db:push": "infisical run -- bun drizzle-kit push",

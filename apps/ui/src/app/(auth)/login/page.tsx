@@ -5,7 +5,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { LoginForm } from './_forms/login-form'
+import { LoginForm } from '../_forms/login-form'
 
 interface AuthProps {
   searchParams: {
@@ -17,7 +17,7 @@ export default function Auth({ searchParams }: AuthProps) {
   return (
     <Card className="min-w-[480px]">
       <CardHeader>
-        <CardTitle className="text-2xl">Sign Up or Login</CardTitle>
+        <CardTitle className="text-2xl">Login</CardTitle>
         <CardDescription>
           Enter your email below to login to your account.
         </CardDescription>

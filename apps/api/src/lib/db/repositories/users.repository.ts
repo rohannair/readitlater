@@ -1,6 +1,12 @@
 import { lucia } from '@/lib/auth'
 import { verify } from '@/lib/crypto'
-import { db, insertUserSchema, type selectUserSchema, users } from '@/lib/db'
+import {
+  db,
+  insertUserSchema,
+  type selectUserSchema,
+  sessions,
+  users,
+} from '@/lib/db'
 import { eq, like } from 'drizzle-orm'
 import { HTTPException } from 'hono/http-exception'
 import { type Cookie, generateIdFromEntropySize } from 'lucia'

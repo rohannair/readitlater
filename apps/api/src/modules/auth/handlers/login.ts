@@ -62,19 +62,25 @@ export const login = new OpenAPIHono<Env>().openapi(
   }),
   async (c) => {
     const { email, password } = c.req.valid('json')
-    const { user, cookie } = await userRepository.login(email, password)
 
-    if (!user?.email) {
-      return c.json({ message: 'Login failed' }, 401)
+    try {
+      const { user, cookie } = await userRepository.login(email, password)
+
+      if (!user) {
+        return c.json({ message: 'Invalid email or password' }, 401)
+      }
+
+      c.header(cookie.name, cookie.value)
+
+      return c.json(
+        {
+          message: 'Logged in successfully',
+          user: { id: user.id, email },
+        },
+        200,
+      )
+    } catch (_) {
+      return c.json({ message: 'An error occurred during login' }, 401)
     }
-
-    setCookie(c, cookie.name, cookie.value, cookie.attributes)
-    return c.json(
-      {
-        message: 'Logged in',
-        user: { id: user.id, email: user.email },
-      },
-      200,
-    )
   },
 )

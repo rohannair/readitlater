@@ -1,5 +1,6 @@
 import { lucia } from '@/lib/auth'
 import { userRepository } from '@/lib/db//repositories/users.repository'
+import { sessionRepository } from '@/lib/db/repositories/sessions.repository'
 import type { Env } from '@/types'
 import { OpenAPIHono, createRoute } from '@hono/zod-openapi'
 import { getCookie } from 'hono/cookie'
@@ -15,11 +16,17 @@ export const getMe = new OpenAPIHono<Env>().openapi(
     },
   }),
   async (c) => {
-    const sessionId = getCookie(c, lucia.sessionCookieName)
+    const sessionId = c.req.header('Authorization')?.split(' ')[1]
+    if (!sessionId) return c.json({ message: 'Not logged in', sessionId }, 401)
 
-    if (!sessionId) return c.json({ message: 'Not logged in bye', sessionId })
+    const session = await sessionRepository.getSessionById(sessionId)
+    if (!session) return c.json({ message: 'Not logged in', sessionId }, 401)
 
-    const user = await userRepository.getUserById(sessionId)
+    const res = await userRepository.getUserById(session.userId)
+    if (!res) return c.json({ message: 'Not logged in', sessionId }, 401)
+
+    // Remove passwordHash from response
+    const { passwordHash, ...user } = res
     return c.json({ user })
   },
 )

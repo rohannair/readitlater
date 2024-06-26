@@ -1,15 +1,15 @@
-import { client } from '../client'
+'use server'
 
-export const createUser = async (json: {
+import { client } from '@/lib/api/client'
+import { setAuthCookie } from '@/lib/cookie'
+
+export async function createUser(json: {
   email: string
   password: string
-}) => {
+}) {
   const res = await client.auth.register.$post({
     json,
   })
-
-  const cookies = res.headers.get('set-cookie')
-  console.log('cookies:', cookies)
 
   if (!res.ok) {
     return {
@@ -17,6 +17,8 @@ export const createUser = async (json: {
       data: await res.json(),
     }
   }
+
+  setAuthCookie(res.headers.get('Auth_session') as string)
 
   return await res.json()
 }

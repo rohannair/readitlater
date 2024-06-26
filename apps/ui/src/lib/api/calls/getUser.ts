@@ -1,3 +1,5 @@
+'use server'
+
 import { client } from '../client'
 
 export async function getUser() {
