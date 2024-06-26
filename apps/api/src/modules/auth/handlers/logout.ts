@@ -15,7 +15,7 @@ export const logout = new OpenAPIHono<Env>().openapi(
     },
   }),
   async (c) => {
-    const sessionId = getCookie(c, lucia.sessionCookieName)
+    const sessionId = c.req.header('Authorization')?.split(' ')[1]
     if (!sessionId) return c.json({ message: 'Not logged in hi' })
 
     const { cookie } = await userRepository.logout(sessionId)

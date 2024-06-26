@@ -42,6 +42,12 @@ app.get(
   }),
 )
 
+app.notFound((c) => c.json({ message: 'Not found' }, 404))
+app.onError((err, c) => {
+  console.error(err)
+  return c.json({ message: 'Internal server error' }, 500)
+})
+
 const routes = app.route('/auth', authRouter).route('/', apiRouter)
 
 // for RPC

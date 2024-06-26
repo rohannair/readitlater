@@ -9,8 +9,14 @@ export const getLinksByUser = new OpenAPIHono<Env>().openapi(
     path: '/links',
     request: {
       query: z.object({
-        offset: z.number().int().optional(),
-        limit: z.number().int().optional(),
+        page: z.preprocess(
+          (a) => Number.parseInt(a as string, 10),
+          z.number().int().min(1),
+        ),
+        pageSize: z.preprocess(
+          (a) => Number.parseInt(a as string, 10),
+          z.number().int().min(1),
+        ),
       }),
     },
     responses: {
@@ -19,30 +25,53 @@ export const getLinksByUser = new OpenAPIHono<Env>().openapi(
         content: {
           'application/json': {
             schema: z.object({
-              links: z.array(selectLinkSchema),
+              links: z.array(selectLinkSchema).nullable(),
+              pagination: z.object({
+                page: z.number().int().min(1),
+                pageSize: z.number().int().min(1),
+                totalCount: z.number().int().min(0),
+                totalPages: z.number().int().min(0),
+              }),
             }),
           },
         },
       },
-      401: {
-        description: 'Not logged in',
-        content: {
-          'application/json': {
-            schema: z.object({
-              message: z.string(),
-            }),
-          },
-        },
-      },
+      // 401: {
+      //   description: 'Not logged in',
+      //   content: {
+      //     'application/json': {
+      //       schema: z.object({
+      //         message: z.string(),
+      //       }),
+      //     },
+      //   },
+      // },
     },
   }),
+  // @ts-expect-error
   async (c) => {
-    // const { offset = 0, limit = 10 } = c.req.valid('query')
+    const { page = 1, pageSize = 10 } = c.req.valid('query')
 
-    if (!c.var.user) return c.json({ message: 'Not logged in' }, 401)
+    if (!c.var.user)
+      return c.json(
+        {
+          links: [],
+          pagination: {
+            page,
+            pageSize,
+            totalCount: 0,
+            totalPages: 0,
+          },
+        },
+        200,
+      )
 
-    const links = await linkRepository.getAllForUser(c.var.user?.id)
+    const { links, pagination } = await linkRepository.getAllForUser(
+      c.var.user?.id,
+      page,
+      pageSize,
+    )
 
-    return c.json({ links }, 200)
+    return c.json({ links, pagination }, 200)
   },
 )
