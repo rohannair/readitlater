@@ -21,3 +21,7 @@ export function setCookie({ name, value, maxAge }: SetCookieOptions) {
 export function setAuthCookie(value: string) {
   return setCookie({ name: 'Auth_session', value })
 }
+
+export function getAuthCookie() {
+  return cookies().get('Auth_session')
+}

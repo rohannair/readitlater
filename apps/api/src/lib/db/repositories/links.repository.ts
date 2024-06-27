@@ -1,7 +1,7 @@
 import { db } from '@/lib/db/client'
 import { type Link, links, linksUsers, users } from '@/lib/db/schema'
 import { createId } from '@paralleldrive/cuid2'
-import { and, eq } from 'drizzle-orm'
+import { and, eq, sql } from 'drizzle-orm'
 
 interface LinkRepository {
   createLink(input: { url: string; userId: string }): Promise<Partial<Link>>
@@ -11,7 +11,19 @@ interface LinkRepository {
     title: string
     summary: string
   }): Promise<void>
-  getAllForUser(userId: string): Promise<Partial<Link>[] | undefined[]>
+  getAllForUser(
+    userId: string,
+    page: number,
+    pageSize: number,
+  ): Promise<{
+    links: Partial<Link>[] | undefined[]
+    pagination: {
+      page: number
+      pageSize: number
+      totalCount: number
+      totalPages: number
+    }
+  }>
   getById(params: { linkId: string; userId: string }): Promise<
     Partial<Link> | undefined
   >
@@ -55,8 +67,10 @@ const createLinkRepository = (): LinkRepository => ({
       .where(eq(links.id, id))
   },
 
-  async getAllForUser(userId) {
-    return await db
+  async getAllForUser(userId, page = 1, pageSize = 10) {
+    const offset = (page - 1) * pageSize
+
+    const results = await db
       .select({
         id: links.id,
         url: links.url ?? '',
@@ -67,6 +81,28 @@ const createLinkRepository = (): LinkRepository => ({
       .innerJoin(linksUsers, eq(links.id, linksUsers.linkId))
       .innerJoin(users, eq(linksUsers.userId, users.id))
       .where(eq(users.id, userId))
+      .limit(pageSize)
+      .offset(offset)
+
+    const totalCount = await db
+      .select({ count: sql`count(*)` })
+      .from(links)
+      .innerJoin(linksUsers, eq(links.id, linksUsers.linkId))
+      .innerJoin(users, eq(linksUsers.userId, users.id))
+      .where(eq(users.id, userId))
+      .then((res) => Number(res[0].count))
+
+    const totalPages = Math.ceil(totalCount / pageSize)
+
+    return {
+      links: results,
+      pagination: {
+        page,
+        pageSize,
+        totalCount,
+        totalPages,
+      },
+    }
   },
 
   async getById({ linkId, userId }) {
