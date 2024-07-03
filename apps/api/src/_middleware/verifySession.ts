@@ -14,22 +14,6 @@ export const verifySession = createMiddleware(
 
     const { session, user } = await lucia.validateSession(sessionId)
 
-    // if (session?.fresh) {
-    //   c.header(
-    //     'Set-Cookie',
-    //     lucia.createSessionCookie(session.id).serialize(),
-    //     {
-    //       append: true,
-    //     },
-    //   )
-    // }
-
-    // if (!session) {
-    //   c.header('Set-Cookie', lucia.createBlankSessionCookie().serialize(), {
-    //     append: true,
-    //   })
-    // }
-
     c.set('user', user)
     c.set('session', session)
 
