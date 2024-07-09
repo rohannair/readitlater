@@ -6,7 +6,7 @@ import { OpenAPIHono, createRoute, z } from '@hono/zod-openapi'
 export const getLinksByUser = new OpenAPIHono<Env>().openapi(
   createRoute({
     method: 'get',
-    path: '/links',
+    path: '/',
     request: {
       query: z.object({
         page: z.preprocess(

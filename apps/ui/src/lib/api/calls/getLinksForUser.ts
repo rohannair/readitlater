@@ -4,7 +4,7 @@ import { client } from '../client'
 
 export async function getLinksForUser() {
   try {
-    const response = await client.links.$get({
+    const response = await client.api.v1.links.$get({
       query: {
         page: '1',
         pageSize: '10',

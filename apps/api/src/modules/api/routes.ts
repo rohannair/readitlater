@@ -1,12 +1,12 @@
 import { verifySession } from '@/_middleware/verifySession'
 import type { Env } from '@/types'
 import { OpenAPIHono as Hono } from '@hono/zod-openapi'
-import { queueScrape, getLinksByUser } from './handlers'
+import { getLinksByUser, queueScrape } from './handlers'
 
 export const apiRouter = new Hono<Env>()
   .use(verifySession)
-  .route('/', queueScrape)
-  .route('/', getLinksByUser)
-  .get('/url/status', async (c) => {
+  .route('/api/v1/links', queueScrape)
+  .route('/api/v1/links', getLinksByUser)
+  .get('/api/v1/links/status', async (c) => {
     return c.json({ message: 'Status' })
   })

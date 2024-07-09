@@ -16,26 +16,26 @@
     "db:studio": "infisical run -- pnpm drizzle-kit studio"
   },
   "dependencies": {
-    "@ai-sdk/openai": "^0.0.29",
-    "@hono/zod-openapi": "^0.14.5",
+    "@ai-sdk/openai": "^0.0.36",
+    "@hono/zod-openapi": "^0.14.8",
     "@hono/zod-validator": "^0.2.2",
     "@lucia-auth/adapter-drizzle": "^1.0.7",
-    "@scalar/hono-api-reference": "^0.5.78",
+    "@scalar/hono-api-reference": "^0.5.100",
     "@trigger.dev/sdk": "3.0.0-beta.39",
-    "ai": "^3.1.36",
+    "ai": "^3.2.19",
     "cheerio": "^1.0.0-rc.12",
-    "drizzle-orm": "^0.31.2",
+    "drizzle-orm": "^0.31.4",
     "drizzle-zod": "^0.5.1",
-    "hono": "^4.4.2",
+    "hono": "^4.4.12",
     "lucia": "^3.2.0",
     "postgres": "^3.4.4",
     "sanitize-html": "^2.13.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@biomejs/biome": "^1.8.0",
+    "@biomejs/biome": "^1.8.3",
     "@types/bun": "latest",
-    "drizzle-kit": "^0.22.7"
+    "drizzle-kit": "^0.22.8"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"

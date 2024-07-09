@@ -5,7 +5,7 @@ import { showRoutes } from 'hono/dev'
 import { logger } from 'hono/logger'
 import { env } from './env'
 import { authRouter } from './modules/auth'
-import { apiRouter } from './modules/scraper'
+import { apiRouter } from './modules/api'
 import type { Env } from './types'
 
 export const app = new Hono<Env>()

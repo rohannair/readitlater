@@ -5,8 +5,8 @@ import { OpenAPIHono, createRoute, z } from '@hono/zod-openapi'
 
 export const queueScrape = new OpenAPIHono<Env>().openapi(
   createRoute({
-    method: 'get',
-    path: '/url',
+    method: 'post',
+    path: '/',
     request: {
       query: z.object({
         url: z.string().url(),
