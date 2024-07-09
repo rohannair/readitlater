@@ -23,7 +23,7 @@ export default function Auth({ searchParams }: AuthProps) {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <LoginForm redirect={searchParams.redirect ?? '/'} />
+        <LoginForm redirectUrl={searchParams.redirect ?? '/'} />
       </CardContent>
     </Card>
   )

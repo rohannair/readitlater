@@ -36,16 +36,6 @@ export const getLinksByUser = new OpenAPIHono<Env>().openapi(
           },
         },
       },
-      // 401: {
-      //   description: 'Not logged in',
-      //   content: {
-      //     'application/json': {
-      //       schema: z.object({
-      //         message: z.string(),
-      //       }),
-      //     },
-      //   },
-      // },
     },
   }),
   // @ts-expect-error
