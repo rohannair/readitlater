@@ -1,39 +1,75 @@
+'use client'
+
 import { DialogLinkCreate } from '@/components/DialogLinkCreate'
-import { Footer } from '@/components/Footer'
-import { Header } from '@/components/Header'
-import { Button } from '@/components/ui/button'
-
+import { Dialog } from '@/components/ui/dialog'
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
+  Tooltip,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
+import { cn } from '@/lib/utils'
+import { TooltipContent } from '@radix-ui/react-tooltip'
+import { Bookmark, BookmarkCheck, Folder } from 'lucide-react'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 
-export default async function Layout({
-  children,
-}: { children: React.ReactNode }) {
+const NavLink = ({
+  href,
+  description,
+  Icon,
+}: {
+  href: string
+  description: string
+  Icon: React.ElementType
+}) => {
+  const pathname = usePathname()
+  const isActive = pathname === href
+
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Link
+          href={href}
+          className={cn(
+            'flex px-3 py-4 items-center justify-center',
+            isActive && 'bg-gray-700 border-t border-gray-600',
+          )}
+        >
+          <Icon className="size-[1.2rem]" />
+        </Link>
+      </TooltipTrigger>
+      <TooltipContent
+        side="right"
+        className="flex bg-white rounded-sm p-1 text-xs ml--2 text-gray-900"
+      >
+        {description}
+      </TooltipContent>
+    </Tooltip>
+  )
+}
+
+const Nav = () => (
+  <nav className="bg-gray-800">
+    <Link href="/" className="flex p-4">
+      <BookmarkCheck />
+    </Link>
+    <NavLink href="/bookmarks" description="Bookmarks" Icon={Bookmark} />
+
+    <NavLink href="/folders" description="Folders" Icon={Folder} />
+  </nav>
+)
+
+export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <Dialog>
-      <div className="flex flex-col h-screen">
-        <Header />
-        <div className="flex flex-row flex-grow gap-x-6 p-4">
-          <aside className="w-48 p-2">
-            <div className="flex items-stretch">
-              <DialogTrigger asChild>
-                <Button size="sm">New Bookmark</Button>
-              </DialogTrigger>
-            </div>
-          </aside>
-          <main>{children}</main>
+      <TooltipProvider delayDuration={200}>
+        <div className="flex flex-row h-screen">
+          <Nav />
+
+          <div className="flex flex-col flex-grow">{children}</div>
         </div>
-        <Footer />
-      </div>
-      <DialogLinkCreate />
+        <DialogLinkCreate />
+      </TooltipProvider>
     </Dialog>
   )
 }
