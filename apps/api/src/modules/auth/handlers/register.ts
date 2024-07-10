@@ -1,3 +1,4 @@
+import { setAuthCookie } from '@/lib/cookie'
 import { OpenAPIHono, createRoute, z } from '@hono/zod-openapi'
 import { hash } from 'src/lib/crypto'
 import { insertUserSchema } from 'src/lib/db'
@@ -49,7 +50,7 @@ export const register = new OpenAPIHono<Env>().openapi(
       passwordHash,
     })
 
-    c.header(cookie.name, cookie.value)
+    setAuthCookie(c, cookie.name, cookie.value)
     return c.json({ message: 'User registered successfully', user }, 201)
   },
 )

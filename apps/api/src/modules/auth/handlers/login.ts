@@ -2,7 +2,7 @@ import { insertUserSchema } from '@/lib/db'
 import { userRepository } from '@/lib/db/repositories/users.repository'
 import type { Env } from '@/types'
 import { OpenAPIHono, createRoute, z } from '@hono/zod-openapi'
-import { setCookie } from 'hono/cookie'
+import { setAuthCookie } from '@/lib/cookie'
 
 const registerSchema = insertUserSchema
   .omit({
@@ -70,7 +70,7 @@ export const login = new OpenAPIHono<Env>().openapi(
         return c.json({ message: 'Invalid email or password' }, 401)
       }
 
-      c.header(cookie.name, cookie.value)
+      setAuthCookie(c, cookie.name, cookie.value)
 
       return c.json(
         {
