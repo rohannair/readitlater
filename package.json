@@ -6,5 +6,8 @@
   ],
   "scripts": {
     "dev": "bun --filter '*' dev"
-  }
+  },
+  "trustedDependencies": [
+    "@tensorflow/tfjs-node"
+  ]
 }
