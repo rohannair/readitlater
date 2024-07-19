@@ -52,12 +52,15 @@ export function LoginForm({
   })
 
   const submitLogin = async (values: z.infer<typeof loginSchema>) => {
-    const res = await login(values)
-    if (res.status !== 'error') {
-      router.push(redirectUrl)
-    }
+    try {
+      const res = await login(values)
 
-    setLoginError('Invalid email or password')
+      if (res?.user) {
+        router.push(redirectUrl)
+      }
+    } catch (_) {
+      setLoginError('Invalid email or password')
+    }
   }
 
   return (

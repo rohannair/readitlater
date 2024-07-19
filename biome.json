@@ -13,6 +13,9 @@
       "recommended": true,
       "correctness": {
         "noUnusedVariables": "error"
+      },
+      "suspicious": {
+        "noExplicitAny": "off"
       }
     }
   },

@@ -14,13 +14,23 @@ export const app = new Hono<Env>()
   .use(csrf())
   .use(
     cors({
-      origin: ['http://localhost:3000', 'http://localhost:3001'],
+      origin: (origin) => {
+        const allowedOrigins = [
+          'http://localhost:3000',
+          'http://localhost:3001',
+        ]
+        return allowedOrigins.includes(origin) ? origin : null
+      },
       allowMethods: ['POST', 'GET', 'OPTIONS', 'PUT', 'DELETE'],
       allowHeaders: [
         'Content-Type',
         'Authorization',
+        'X-Requested-With',
+        'Accept',
+        'Origin',
         'Upgrade-Insecure-Requests',
       ],
+      exposeHeaders: ['Set-Cookie'],
       credentials: true,
       maxAge: 600,
     }),

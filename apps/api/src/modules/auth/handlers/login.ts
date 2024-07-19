@@ -10,6 +10,8 @@ const registerSchema = insertUserSchema
     passwordHash: true,
     createdAt: true,
     updatedAt: true,
+    givenName: true,
+    familyName: true,
   })
   .extend({
     email: z.string().email(),
@@ -37,12 +39,12 @@ export const login = new OpenAPIHono<Env>().openapi(
           'application/json': {
             schema: z.object({
               message: z.string(),
+
               user: z
                 .object({
-                  id: z.string().optional(),
-                  email: z.string().email().optional(),
+                  id: z.string(),
+                  email: z.string().email(),
                 })
-                .optional()
                 .openapi('User'),
             }),
           },
@@ -60,6 +62,7 @@ export const login = new OpenAPIHono<Env>().openapi(
       },
     },
   }),
+  // @ts-ignore
   async (c) => {
     const { email, password } = c.req.valid('json')
 
@@ -71,6 +74,7 @@ export const login = new OpenAPIHono<Env>().openapi(
       }
 
       setAuthCookie(c, cookie.name, cookie.value)
+      console.log(c.res.headers)
 
       return c.json(
         {

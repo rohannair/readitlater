@@ -6,6 +6,15 @@ import { createMiddleware } from 'hono/factory'
 export const verifySession = createMiddleware(
   async (c: Context, next: Next) => {
     const sessionId = getCookie(c, lucia.sessionCookieName) ?? null
+    console.log('All cookies:', getCookie(c))
+    console.log('Raw Cookie header:', c.req.raw.headers.get('cookie'))
+    console.log('Request URL:', c.req.url)
+    console.log('Request method:', c.req.method)
+    console.log(
+      'Request headers:',
+      // @ts-ignore
+      Object.fromEntries(c.req.raw.headers?.entries()),
+    )
 
     if (!sessionId) {
       c.set('session', null)

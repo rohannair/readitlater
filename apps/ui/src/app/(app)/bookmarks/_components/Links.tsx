@@ -1,3 +1,5 @@
+'use client'
+
 import { getLinksForUser } from '@/lib/api/calls/getLinksForUser'
 import Link from 'next/link'
 
@@ -14,7 +16,6 @@ function BookmarkLink({
   tags: string[]
   createdAt: string
 }) {
-  'use client'
   return (
     <Link key={id} href={`/bookmarks/${id}`}>
       <h4 className="text-sm font-bold">{title}</h4>
@@ -33,8 +34,9 @@ function BookmarkLink({
   )
 }
 
-export async function Links() {
-  const { links } = (await getLinksForUser()) ?? { links: [] }
-
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+export function Links({ links }: { links: any[] }) {
+  if (!links) return null
+  console.log(links)
   return links?.map((link) => <BookmarkLink key={link.id} {...link} />) ?? null
 }

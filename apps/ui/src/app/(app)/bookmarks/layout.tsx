@@ -5,6 +5,8 @@ import { DialogTrigger } from '@/components/ui/dialog'
 import { Boxes, Link as LinkIcon, Tags } from 'lucide-react'
 import Link from 'next/link'
 import { Links } from './_components/Links'
+import { getLinksForUser } from '@/lib/api/calls/getLinksForUser'
+import { useEffect, useState } from 'react'
 
 function Heading({ children }: { children: string }) {
   return <h3 className="font-semibold text-white mb-2">{children}</h3>
@@ -30,6 +32,17 @@ function ListItem({
 export default function BookmarkLayout({
   children,
 }: { children: React.ReactNode }) {
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+  const [links, setLinks] = useState<any>(null)
+
+  useEffect(() => {
+    async function fetchLinks() {
+      const { links } = await getLinksForUser()
+      setLinks(links)
+    }
+    fetchLinks()
+  }, [])
+
   return (
     <div className="grid grid-cols-12">
       <div className="flex flex-col col-span-3 border-r bg-gray-700 border-gray-600 p-4">
@@ -45,7 +58,7 @@ export default function BookmarkLayout({
             Tags
           </ListItem>
           <hr className="border-t border-zinc-400 my-4 w-full h-[1px]" />
-          <Links />
+          <Links links={links} />
         </nav>
       </div>
       <div className="col-span-9">
