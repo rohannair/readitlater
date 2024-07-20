@@ -1,7 +1,7 @@
 import { Badge } from '@/components/ui/badge'
-import { FileIcon } from 'lucide-react'
+import { ScrollArea } from '@/components/ui/scroll-area'
 import Link from 'next/link'
-import { P, match } from 'ts-pattern'
+import { match } from 'ts-pattern'
 
 function BookmarkLink({
   id,
@@ -60,8 +60,12 @@ function BookmarkLink({
 export function Links({ links }: { links: any[] }) {
   if (!links) return null
   return (
-    <div className="flex flex-col gap-2">
-      {links?.map((link) => <BookmarkLink key={link.id} {...link} />) ?? null}
-    </div>
+    // <div className="">
+    <ScrollArea className="h-[500px] w-full">
+      <div className="flex flex-col gap-y-4">
+        {links?.map((link) => <BookmarkLink key={link.id} {...link} />) ?? null}
+      </div>
+    </ScrollArea>
+    // </div>
   )
 }

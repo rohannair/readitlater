@@ -11,5 +11,6 @@
   },
   "trustedDependencies": [
     "@tensorflow/tfjs-node"
-  ]
+  ],
+  "packageManager": "npm@10.8.1"
 }

@@ -1,3 +1,4 @@
+import { formatDistanceToNow, formatRelative } from 'date-fns'
 import Link from 'next/link'
 import type { MouseEventHandler } from 'react'
 
@@ -14,11 +15,11 @@ interface LinkListItemProps {
 
 export const LinkListItem = (props: LinkListItemProps) => {
   return (
-    <div className="bg-background rounded-lg p-4 shadow-sm">
+    <div className="bg-foreground rounded-lg p-3 shadow-sm">
       <Link
         href={props.href}
         className="block"
-        onClick={props.onClick}
+        // onClick={props.onClick}
         prefetch={props.prefetch}
       >
         <h3 className="font-semibold text-lg truncate">{props.title}</h3>
@@ -37,7 +38,7 @@ export const LinkListItem = (props: LinkListItemProps) => {
           ))}
         </div>
         <div className="text-sm text-muted-foreground mt-2">
-          Added on {props.createdAt}
+          Added {formatRelative(props.createdAt, new Date())}
         </div>
       </Link>
     </div>

@@ -6,9 +6,9 @@ import { Toaster } from '@/components/ui/sonner'
 import { TooltipProvider } from '@/components/ui/tooltip'
 import { cn } from '@/lib/utils'
 import type { Metadata, Viewport } from 'next'
-import { Open_Sans } from 'next/font/google'
+import { Instrument_Sans } from 'next/font/google'
 
-const fontSans = Open_Sans({
+const fontSans = Instrument_Sans({
   subsets: ['latin'],
   variable: '--font-sans',
 })

@@ -15,7 +15,7 @@ export const StatusBadge = ({
     .otherwise(() => 'secondary') as BadgeColor
 
   return (
-    <Badge variant={variant} className={cn('text-xs flex-grow-0')}>
+    <Badge variant={variant} className="text-xs flex-grow-0 opacity-75">
       {status}
     </Badge>
   )

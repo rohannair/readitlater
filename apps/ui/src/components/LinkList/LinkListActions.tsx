@@ -1,10 +1,10 @@
+import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { Button } from '@/components/ui/button'
 import {
   AArrowUpIcon,
   ArrowDownWideNarrowIcon,
@@ -20,7 +20,7 @@ export const LinkListActions = () => {
     <div className="flex items-center gap-2">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="outline" size="sm">
+          <Button variant="ghost" size="sm">
             <FilterIcon className="h-4 w-4 mr-2" />
             Filter
           </Button>
@@ -42,7 +42,7 @@ export const LinkListActions = () => {
       </DropdownMenu>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="outline" size="sm">
+          <Button variant="ghost" size="sm">
             <ListOrderedIcon className="h-4 w-4 mr-2" />
             Sort
           </Button>

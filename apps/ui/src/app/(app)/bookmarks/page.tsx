@@ -1,8 +1,8 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
 import { LinkList } from '@/components/LinkList'
 import { getLinksForUser } from '@/lib/api/calls/getLinksForUser'
+import React, { useEffect, useState } from 'react'
 
 export default function LinksPage() {
   const [links, setLinks] = useState<any[]>([])
@@ -29,12 +29,8 @@ export default function LinksPage() {
     fetchLinks()
   }, [])
 
-  if (isLoading) return <div>Loading...</div>
-  if (error) return <div>Error: {error}</div>
+  if (isLoading) return <div className="p-4">Loading...</div>
+  if (error) return <div className="p-4">Error: {error}</div>
 
-  return (
-    <>
-      <LinkList links={links} pagination={pagination} />
-    </>
-  )
+  return <LinkList links={links} pagination={pagination} />
 }

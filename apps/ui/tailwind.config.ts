@@ -19,6 +19,28 @@ const config = {
       },
     },
     extend: {
+      typography: {
+        DEFAULT: {
+          css: {
+            'p:only-child': {
+              '&:empty, &:blank, &:has(:only-child:empty)': {
+                display: 'none',
+                margin: 0,
+              },
+            },
+          },
+        },
+        sm: {
+          css: {
+            'p:only-child': {
+              '&:empty, &:blank, &:has(:only-child:empty)': {
+                display: 'none',
+                margin: 0,
+              },
+            },
+          },
+        },
+      },
       colors: {
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
