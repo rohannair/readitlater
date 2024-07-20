@@ -14,7 +14,7 @@
     "dev:trigger": "infisical run -- bunx trigger.dev@beta dev",
     "------------------- DB -------------------": "",
     "db:generate": "infisical run -- bun drizzle-kit generate",
-    "db:push": "infisical run -- bun drizzle-kit push",
+    "db:migrate": "infisical run -- bun run src/lib/db/migrate.ts",
     "db:studio": "infisical run -- pnpm drizzle-kit studio"
   },
   "dependencies": {
@@ -33,6 +33,7 @@
     "hono": "^4.4.12",
     "lucia": "^3.2.0",
     "pg": "^8.12.0",
+    "postgres": "^3.4.4",
     "sanitize-html": "^2.13.0",
     "zod": "^3.23.8"
   },

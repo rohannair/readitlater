@@ -1,7 +1,7 @@
 import { type Link, links, linksUsers, users } from '@/lib/db/schema'
 import { createId } from '@paralleldrive/cuid2'
 import { and, eq, sql } from 'drizzle-orm'
-import type { NodePgDatabase } from 'drizzle-orm/node-postgres'
+import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js'
 
 interface LinkRepository {
   createLink(input: { url: string; userId: string }): Promise<Partial<Link>>
@@ -31,7 +31,7 @@ interface LinkRepository {
 }
 
 export const createLinkRepository = (
-  client?: NodePgDatabase,
+  client?: PostgresJsDatabase,
 ): LinkRepository => {
   const db = client ?? globalThis.db
   return {

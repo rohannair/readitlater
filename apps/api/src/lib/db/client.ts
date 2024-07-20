@@ -1,16 +1,14 @@
 import { env } from '@/env'
-import { type NodePgDatabase, drizzle } from 'drizzle-orm/node-postgres'
+import { type PostgresJsDatabase, drizzle } from 'drizzle-orm/postgres-js'
 import { Client } from 'pg'
+import postgres from 'postgres'
 
 declare global {
-  var db: NodePgDatabase
+  var db: PostgresJsDatabase
 }
 
-export const client = new Client({
-  connectionString: env.DB_URL,
-})
+export const client = postgres(env.DB_URL)
 
-await client.connect()
 // biome-ignore lint/suspicious/noRedeclare: not a redeclaration
 export const db = drizzle(client)
 if (!globalThis.db) {

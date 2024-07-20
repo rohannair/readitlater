@@ -9,7 +9,6 @@ export const getSummary = task({
     try {
       const summary = await summarizeDocument(document)
 
-      await client.connect()
       await createLinkRepository(db).updateLink({
         id,
         summary,
