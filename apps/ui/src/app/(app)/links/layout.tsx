@@ -12,8 +12,6 @@ export default async function LinkLayout({
   })
   const links = await res.json()
 
-  console.log(links)
-
   return (
     <div>
       <pre>{JSON.stringify(links, null, 2)}</pre>

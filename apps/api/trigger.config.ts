@@ -1,0 +1,18 @@
+import type { TriggerConfig } from '@trigger.dev/sdk/v3'
+
+export const config: TriggerConfig = {
+  project: 'proj_fewwqfylgcfjaqlyaxsh',
+  logLevel: 'log',
+  retries: {
+    enabledInDev: true,
+    default: {
+      maxAttempts: 3,
+      minTimeoutInMs: 1000,
+      maxTimeoutInMs: 10000,
+      factor: 2,
+      randomize: true,
+    },
+  },
+  triggerDirectories: ['src/workers'],
+  dependenciesToBundle: ['@t3-oss/env-nextjs', '@t3-oss/env-core', 'zod'],
+}

@@ -1,9 +1,7 @@
-import { lucia } from '@/lib/auth'
 import { userRepository } from '@/lib/db//repositories/users.repository'
 import { sessionRepository } from '@/lib/db/repositories/sessions.repository'
 import type { Env } from '@/types'
 import { OpenAPIHono, createRoute } from '@hono/zod-openapi'
-import { getCookie } from 'hono/cookie'
 
 export const getMe = new OpenAPIHono<Env>().openapi(
   createRoute({

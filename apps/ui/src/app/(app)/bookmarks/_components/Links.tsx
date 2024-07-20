@@ -34,9 +34,7 @@ function BookmarkLink({
   )
 }
 
-// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 export function Links({ links }: { links: any[] }) {
   if (!links) return null
-  console.log(links)
   return links?.map((link) => <BookmarkLink key={link.id} {...link} />) ?? null
 }

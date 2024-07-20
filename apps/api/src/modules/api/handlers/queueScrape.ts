@@ -8,9 +8,15 @@ export const queueScrape = new OpenAPIHono<Env>().openapi(
     method: 'post',
     path: '/',
     request: {
-      query: z.object({
-        url: z.string().url(),
-      }),
+      body: {
+        content: {
+          'application/json': {
+            schema: z.object({
+              url: z.string().url(),
+            }),
+          },
+        },
+      },
     },
     responses: {
       200: {
@@ -46,7 +52,7 @@ export const queueScrape = new OpenAPIHono<Env>().openapi(
     },
   }),
   async (c) => {
-    const { url } = c.req.valid('query')
+    const { url } = c.req.valid('json')
 
     if (!c.var.user?.id) {
       return c.json({ message: 'Not logged in' }, 401)

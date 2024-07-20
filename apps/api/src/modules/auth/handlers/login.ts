@@ -1,8 +1,8 @@
+import { setAuthCookie } from '@/lib/cookie'
 import { insertUserSchema } from '@/lib/db'
 import { userRepository } from '@/lib/db/repositories/users.repository'
 import type { Env } from '@/types'
 import { OpenAPIHono, createRoute, z } from '@hono/zod-openapi'
-import { setAuthCookie } from '@/lib/cookie'
 
 const registerSchema = insertUserSchema
   .omit({
@@ -74,7 +74,6 @@ export const login = new OpenAPIHono<Env>().openapi(
       }
 
       setAuthCookie(c, cookie.name, cookie.value)
-      console.log(c.res.headers)
 
       return c.json(
         {

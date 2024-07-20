@@ -7,9 +7,9 @@ interface LinkRepository {
   createLink(input: { url: string; userId: string }): Promise<Partial<Link>>
   updateLink(params: {
     id: string
-    body: string
-    title: string
-    summary: string
+    body?: string
+    title?: string
+    summary?: string
   }): Promise<void>
   getAllForUser(
     userId: string,
@@ -60,9 +60,9 @@ const createLinkRepository = (): LinkRepository => ({
     await db
       .update(links)
       .set({
-        cleaned: body,
-        title: title,
-        summary: summary,
+        ...(body ? { cleaned: body } : null),
+        ...(title ? { title } : null),
+        ...(summary ? { summary } : null),
       })
       .where(eq(links.id, id))
   },

@@ -40,7 +40,6 @@ export const getLinksByUser = new OpenAPIHono<Env>().openapi(
   }),
   // @ts-expect-error
   async (c) => {
-    console.log('HITS')
     const { page = 1, pageSize = 10 } = c.req.valid('query')
 
     if (!c.var.user)
