@@ -8,6 +8,7 @@ export const env = createEnv({
       .enum(['development', 'test', 'production'])
       .default('development'),
     DB_URL: z.string().min(1),
+    ENABLE_SQL_LOGGING: z.boolean().default(false),
   },
   experimental__runtimeEnv: {},
 })

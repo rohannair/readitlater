@@ -1,4 +1,5 @@
 import { type Link, links, linksUsers, users } from '@/lib/db/schema'
+import { stripQueryParams } from '@/lib/url'
 import { createId } from '@paralleldrive/cuid2'
 import { and, desc, eq, sql } from 'drizzle-orm'
 import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js'
@@ -45,7 +46,13 @@ export const createLinkRepository = (
           .insert(links)
           .values({
             id: createId(),
-            url: url,
+            url: stripQueryParams(url),
+          })
+          .onConflictDoUpdate({
+            target: links.url,
+            set: {
+              updatedAt: sql`now()`,
+            },
           })
           .returning({
             id: links.id,
@@ -53,10 +60,13 @@ export const createLinkRepository = (
             status: links.status,
           })
 
-        await tx.insert(linksUsers).values({
-          linkId: link.id,
-          userId: userId,
-        })
+        await tx
+          .insert(linksUsers)
+          .values({
+            linkId: link.id,
+            userId: userId,
+          })
+          .onConflictDoNothing()
 
         return link
       })

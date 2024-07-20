@@ -1,6 +1,5 @@
 import { env } from '@/env'
 import { type PostgresJsDatabase, drizzle } from 'drizzle-orm/postgres-js'
-import { Client } from 'pg'
 import postgres from 'postgres'
 
 declare global {
@@ -10,7 +9,9 @@ declare global {
 export const client = postgres(env.DB_URL)
 
 // biome-ignore lint/suspicious/noRedeclare: not a redeclaration
-export const db = drizzle(client)
+export const db = drizzle(client, {
+  logger: env.ENABLE_SQL_LOGGING,
+})
 if (!globalThis.db) {
   globalThis.db = db
 }

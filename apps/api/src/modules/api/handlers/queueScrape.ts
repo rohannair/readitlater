@@ -64,14 +64,18 @@ export const queueScrape = new OpenAPIHono<Env>().openapi(
     })
 
     if (!link?.id) {
-      return c.json({ message: 'Link already exists' }, 400)
+      return c.json({ message: 'Something went wrong' }, 400)
     }
 
-    const handle = await scrapeWebsite.trigger({
-      url: url,
-      link: link.id,
-    })
+    if (!link.summary) {
+      const handle = await scrapeWebsite.trigger({
+        url: url,
+        link: link.id,
+      })
 
-    return c.json({ message: 'Queued', handle }, 200)
+      return c.json({ message: 'Queued', handle }, 200)
+    }
+
+    return c.json({ message: 'Link exists' }, 200)
   },
 )
