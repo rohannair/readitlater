@@ -35,7 +35,7 @@ export const DialogLinkCreate = () => {
   const form = useForm<z.infer<typeof linkCreateSchema>>({
     resolver: zodResolver(linkCreateSchema),
     defaultValues: {
-      url: 'https://',
+      url: '',
     },
   })
 
