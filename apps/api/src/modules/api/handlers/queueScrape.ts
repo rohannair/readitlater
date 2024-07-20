@@ -58,7 +58,11 @@ export const queueScrape = new OpenAPIHono<Env>().openapi(
       return c.json({ message: 'Not logged in' }, 401)
     }
 
-    const link = await createLinkRepository(globalThis.db).createLink({
+    if (checkDenyList(url)) {
+      return c.json({ message: 'This site is not yet supported' }, 400)
+    }
+
+    const link = await createLinkRepository().createLink({
       url,
       userId: c.var.user?.id,
     })
@@ -79,3 +83,14 @@ export const queueScrape = new OpenAPIHono<Env>().openapi(
     return c.json({ message: 'Link exists' }, 200)
   },
 )
+
+function checkDenyList(url: string) {
+  const denyList = [
+    'twitter.com',
+    'x.com',
+    'facebook.com',
+    'instagram.com',
+    'linkedin.com',
+  ]
+  return denyList.some((deny) => url.includes(deny))
+}
