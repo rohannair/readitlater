@@ -1,6 +1,3 @@
-'use client'
-
-import { getLinksForUser } from '@/lib/api/calls/getLinksForUser'
 import Link from 'next/link'
 
 function BookmarkLink({
@@ -17,11 +14,16 @@ function BookmarkLink({
   createdAt: string
 }) {
   return (
-    <Link key={id} href={`/bookmarks/${id}`}>
+    <Link
+      key={id}
+      href={`/bookmarks/${id}`}
+      className="flex flex-col py-4 subpixel-antialiased border-b border-gray-500"
+    >
       <h4 className="text-sm font-bold">{title}</h4>
-      <div className="text-sm text-gray-400">({url})</div>
-
-      <div className="text-xs font-light mt-2">
+      <div className="text-xs text-gray-300 text-wrap break-all">
+        ({url.split('?')[0]})
+      </div>
+      <div className="text-xs text-gray-100 mt-2">
         Added: {new Date(createdAt).toDateString()}
       </div>
 

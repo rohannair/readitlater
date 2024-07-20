@@ -1,12 +1,8 @@
 'use client'
 
 import { DialogLinkCreate } from '@/components/DialogLinkCreate'
-import { Dialog } from '@/components/ui/dialog'
-import {
-  Tooltip,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip'
+
+import { Tooltip, TooltipTrigger } from '@/components/ui/tooltip'
 import { cn } from '@/lib/utils'
 import { TooltipContent } from '@radix-ui/react-tooltip'
 import { Bookmark, BookmarkCheck, Folder } from 'lucide-react'
@@ -48,28 +44,28 @@ const NavLink = ({
   )
 }
 
-const Nav = () => (
-  <nav className="bg-gray-800">
-    <Link href="/" className="flex p-4">
-      <BookmarkCheck />
-    </Link>
-    <NavLink href="/bookmarks" description="Bookmarks" Icon={Bookmark} />
-
-    <NavLink href="/folders" description="Folders" Icon={Folder} />
-  </nav>
-)
-
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <Dialog>
-      <TooltipProvider delayDuration={200}>
-        <div className="flex flex-row h-screen">
-          <Nav />
-
-          <div className="flex flex-col flex-grow">{children}</div>
-        </div>
-        <DialogLinkCreate />
-      </TooltipProvider>
-    </Dialog>
+    <>
+      <div className="flex flex-row h-screen">
+        <nav className="bg-gray-800 min-h-full relative">
+          <div className="fixed inset-y-0 left-0 z-50 block w-16 overflow-y-auto bg-gray-900 pb-4">
+            <Link
+              href="/"
+              className="flex px-3 py-4 items-center justify-center"
+            >
+              <BookmarkCheck />
+            </Link>
+            <NavLink
+              href="/bookmarks"
+              description="Bookmarks"
+              Icon={Bookmark}
+            />
+            <NavLink href="/folders" description="Folders" Icon={Folder} />
+          </div>
+        </nav>
+        <div className="flex flex-col flex-grow pl-16">{children}</div>
+      </div>
+    </>
   )
 }

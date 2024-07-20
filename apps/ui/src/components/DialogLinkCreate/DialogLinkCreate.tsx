@@ -18,13 +18,17 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { submitLink } from '@/lib/api/calls/submitLink'
+import { createUrl } from '@/lib/api/calls/createUrl'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useRouter } from 'next/router'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
 const linkCreateSchema = z.object({
-  url: z.string().url('URL is invalid'),
+  url: z.preprocess(
+    (value) => (value === '' ? undefined : value),
+    z.string().trim().url().startsWith('http'),
+  ),
 })
 
 export const DialogLinkCreate = () => {
@@ -36,12 +40,16 @@ export const DialogLinkCreate = () => {
   })
 
   const submit = async (values: z.infer<typeof linkCreateSchema>) => {
-    const res = await submitLink(values)
-    if (res?.status === 'error') {
-      console.error('Failed to submit link:', res.data)
+    try {
+      await createUrl(values)
+      const router = useRouter()
+      router.push('/bookmarks')
+    } catch (_) {
+      console.error('Failed to create URL')
+      return
+    } finally {
+      close()
     }
-
-    close()
   }
 
   return (
@@ -69,15 +77,16 @@ export const DialogLinkCreate = () => {
               </FormItem>
             )}
           />
+
+          <DialogFooter className="flex flex-row gap-x-4">
+            <DialogClose asChild>
+              <Button variant="link">Close</Button>
+            </DialogClose>
+            <DialogClose asChild>
+              <Button type="submit">Submit URL</Button>
+            </DialogClose>
+          </DialogFooter>
         </form>
-        <DialogFooter className="flex flex-row gap-x-4">
-          <DialogClose asChild>
-            <Button variant="link">Close</Button>
-          </DialogClose>
-          <DialogClose asChild>
-            <Button type="submit">Submit URL</Button>
-          </DialogClose>
-        </DialogFooter>
       </Form>
     </DialogContent>
   )
