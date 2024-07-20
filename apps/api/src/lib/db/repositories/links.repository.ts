@@ -1,6 +1,6 @@
 import { type Link, links, linksUsers, users } from '@/lib/db/schema'
 import { createId } from '@paralleldrive/cuid2'
-import { and, eq, sql } from 'drizzle-orm'
+import { and, desc, eq, sql } from 'drizzle-orm'
 import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js'
 
 interface LinkRepository {
@@ -95,6 +95,7 @@ export const createLinkRepository = (
         .where(eq(users.id, userId))
         .limit(pageSize)
         .offset(offset)
+        .orderBy(desc(links.createdAt))
 
       const totalCount = await db
         .select({ count: sql`count(*)` })
