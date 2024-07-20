@@ -1,0 +1,102 @@
+name: Monorepo Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      build_target:
+        description: "Choose what to build"
+        required: true
+        default: "both"
+        type: choice
+        options:
+          - ui
+          - api
+          - both
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  detect-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      ui_changed: ${{ steps.changes.outputs.ui }}
+      api_changed: ${{ steps.changes.outputs.api }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v2
+        if: github.event_name == 'pull_request' || github.event_name == 'push'
+        id: changes
+        with:
+          filters: |
+            ui:
+              - 'apps/ui/**'
+            api:
+              - 'apps/api/**'
+          before: ${{ github.event.before }}
+
+  build-ui:
+    needs: detect-changes
+    if: >
+      github.event_name == 'workflow_dispatch' && (github.event.inputs.build_target == 'ui' || github.event.inputs.build_target == 'both') ||
+      (github.event_name != 'workflow_dispatch' && needs.detect-changes.outputs.ui_changed == 'true')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+      - name: Cache Bun dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.bun/install/cache
+          key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lockb') }}
+          restore-keys: |
+            ${{ runner.os }}-bun-
+      - name: Cache Next.js build
+        uses: actions/cache@v3
+        with:
+          path: apps/ui/.next/cache
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('apps/ui/**/*.[jt]s', 'apps/ui/**/*.[jt]sx') }}
+          restore-keys: |
+            ${{ runner.os }}-nextjs-
+      - name: Build UI
+        run: |
+          cd apps/ui
+          bun install
+          bun next build
+      - name: Test UI
+        run: |
+          cd apps/ui
+          bun test
+
+  test-api:
+    needs: detect-changes
+    if: >
+      github.event_name == 'workflow_dispatch' && (github.event.inputs.build_target == 'api' || github.event.inputs.build_target == 'both') ||
+      (github.event_name != 'workflow_dispatch' && needs.detect-changes.outputs.api_changed == 'true')
+    runs-on: ubuntu-latest
+    env:
+      DB_URL: ${{ secrets.DB_URL }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+      - name: Cache Bun dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.bun/install/cache
+          key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lockb') }}
+          restore-keys: |
+            ${{ runner.os }}-bun-
+      - name: Build API
+        run: |
+          cd apps/api
+          bun install
+          bun test
