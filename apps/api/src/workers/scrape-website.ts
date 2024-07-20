@@ -21,25 +21,35 @@ export const scrapeWebsite = task({
 })
 
 export async function scrape({ url, link }: ScrapeWebsiteParams) {
-  const body = await fetchSite(url)
-  const $ = cheerio.load(body)
+  const linkRepository = await createLinkRepository(db)
+  try {
+    const body = await fetchSite(url)
+    const $ = cheerio.load(body)
 
-  // Extract the main content (this can be adapted based on the structure of the target websites)
-  const mainContent = getMainContent($)
+    // Extract the main content (this can be adapted based on the structure of the target websites)
+    const mainContent = getMainContent($)
 
-  if (!mainContent) {
-    throw new Error('No main content found')
+    if (!mainContent) {
+      throw new Error('No main content found')
+    }
+
+    await client.connect()
+    await linkRepository.updateLink({
+      id: link,
+      body: toMarkdown(sanitizeHtml(mainContent)),
+      title: $('title').text(),
+      status: 'processing',
+    })
+
+    await getSummary.trigger({
+      id: link,
+      document: mainContent,
+    })
+  } catch (error) {
+    await linkRepository.updateLink({
+      id: link,
+      status: 'error',
+    })
+    throw error
   }
-
-  await client.connect()
-  await createLinkRepository(db).updateLink({
-    id: link,
-    body: toMarkdown(sanitizeHtml(mainContent)),
-    title: $('title').text(),
-  })
-
-  await getSummary.trigger({
-    id: link,
-    document: mainContent,
-  })
 }

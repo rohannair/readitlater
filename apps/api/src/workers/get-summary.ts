@@ -6,11 +6,23 @@ import { task } from '@trigger.dev/sdk/v3'
 export const getSummary = task({
   id: 'get-summary',
   run: async ({ id, document }: { id: string; document: string }) => {
-    const summary = await summarizeDocument(document)
+    try {
+      const summary = await summarizeDocument(document)
 
-    await client.connect()
-    await createLinkRepository(db).updateLink({ id, summary })
-    return summary
+      await client.connect()
+      await createLinkRepository(db).updateLink({
+        id,
+        summary,
+        status: 'completed',
+      })
+      return summary
+    } catch (error) {
+      await createLinkRepository(db).updateLink({
+        id,
+        status: 'error',
+      })
+      throw error
+    }
   },
   queue: {
     concurrencyLimit: 3,

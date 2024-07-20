@@ -10,7 +10,8 @@ interface LinkRepository {
     body?: string
     title?: string
     summary?: string
-  }): Promise<void>
+    status?: 'submitted' | 'processing' | 'completed' | 'error'
+  }): Promise<Link>
   getAllForUser(
     userId: string,
     page: number,
@@ -49,6 +50,7 @@ export const createLinkRepository = (
           .returning({
             id: links.id,
             url: links.url,
+            status: links.status,
           })
 
         await tx.insert(linksUsers).values({
@@ -60,15 +62,20 @@ export const createLinkRepository = (
       })
     },
 
-    async updateLink({ id, body, title, summary }) {
-      await db
+    async updateLink({ id, body, title, summary, status }) {
+      const [link] = await db
         .update(links)
         .set({
           ...(body ? { cleaned: body } : null),
           ...(title ? { title } : null),
           ...(summary ? { summary } : null),
+          ...(status ? { status } : null),
+          updatedAt: sql`now()`,
         })
         .where(eq(links.id, id))
+        .returning()
+
+      return link
     },
 
     async getAllForUser(userId, page = 1, pageSize = 10) {
@@ -79,6 +86,7 @@ export const createLinkRepository = (
           id: links.id,
           url: links.url ?? '',
           title: links.title ?? '',
+          status: links.status,
           createdAt: links.createdAt,
         })
         .from(links)
@@ -118,6 +126,8 @@ export const createLinkRepository = (
           cleaned: links.cleaned,
           summary: links.summary,
           createdAt: links.createdAt,
+          updatedAt: links.updatedAt,
+          status: links.status,
         })
         .from(links)
         .innerJoin(linksUsers, eq(links.id, linksUsers.linkId))

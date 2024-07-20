@@ -48,8 +48,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <>
       <div className="flex flex-row h-screen">
-        <nav className="bg-gray-800 min-h-full relative">
-          <div className="fixed inset-y-0 left-0 z-50 block w-16 overflow-y-auto bg-gray-900 pb-4">
+        <nav className="bg-muted min-h-full relative">
+          <div className="fixed inset-y-0 left-0 z-50 block w-16 overflow-y-auto bg-muted pb-4">
             <Link
               href="/"
               className="flex px-3 py-4 items-center justify-center"

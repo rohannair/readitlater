@@ -34,7 +34,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body
         className={cn(
-          'min-h-screen bg-background font-sans antialiased overflow-y-scroll',
+          'min-h-screen bg-background font-sans antialiased',
           fontSans.variable,
         )}
       >

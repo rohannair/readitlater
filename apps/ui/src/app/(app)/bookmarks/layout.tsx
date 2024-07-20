@@ -3,6 +3,7 @@
 import { DialogLinkCreate } from '@/components/DialogLinkCreate'
 import { Button } from '@/components/ui/button'
 import { DialogTrigger } from '@/components/ui/dialog'
+import { ScrollArea } from '@/components/ui/scroll-area'
 import { getLinksForUser } from '@/lib/api/calls/getLinksForUser'
 import { Boxes, Link as LinkIcon, Tags } from 'lucide-react'
 import Link from 'next/link'
@@ -53,7 +54,7 @@ export default function BookmarkLayout({
 
   return (
     <div className="grid grid-cols-12 min-h-screen">
-      <div className="flex flex-col col-span-3 border-r bg-gray-700 border-gray-600 p-4 relative">
+      <div className="flex flex-col col-span-2 border-r bg-muted/50 border-gray-600 p-4 relative">
         <div className="sticky top-4">
           <Heading>Links</Heading>
           <nav>
@@ -79,7 +80,7 @@ export default function BookmarkLayout({
           </nav>
         </div>
       </div>
-      <div className="col-span-9 bg-white">
+      <div className="col-span-10 bg-white">
         <div className="flex-grow bg-white text-gray-900">{children}</div>
       </div>
       <DialogLinkCreate />
