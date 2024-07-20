@@ -1,4 +1,4 @@
-import { linksUsers } from '@/lib/db/schema/linksUsers'
+import { categories, linksTags, linksUsers } from '@/lib/db/schema'
 import { relations } from 'drizzle-orm'
 import { pgTable, text, timestamp, varchar } from 'drizzle-orm/pg-core'
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod'
@@ -14,6 +14,11 @@ export const links = pgTable('links', {
   title: varchar('title', {
     length: 255,
   }),
+  status: varchar('status', {
+    enum: ['submitted', 'processing', 'completed', 'error'],
+  })
+    .default('submitted')
+    .notNull(),
   cleaned: text('cleaned'),
   summary: text('summary'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
@@ -22,6 +27,8 @@ export const links = pgTable('links', {
 
 export const linksRelations = relations(links, ({ many }) => ({
   users: many(linksUsers),
+  categories: many(categories),
+  tags: many(linksTags),
 }))
 
 export const insertLinkSchema = createInsertSchema(links)

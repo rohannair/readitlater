@@ -1,5 +1,4 @@
 import {
-  db,
   insertSessionSchema,
   type selectSessionSchema,
   sessions,
@@ -18,44 +17,50 @@ interface SessionRepository {
   deleteExpiredSessions(): Promise<void>
 }
 
-const createSessionRepository = (): SessionRepository => ({
-  async getSessionById(id: string): Promise<Session | null> {
-    const [session] = await db
-      .select()
-      .from(sessions)
-      .where(eq(sessions.id, id))
-    return session || null
-  },
+const createSessionRepository = (): SessionRepository => {
+  const db = globalThis.db
+  return {
+    async getSessionById(id: string): Promise<Session | null> {
+      const [session] = await db
+        .select()
+        .from(sessions)
+        .where(eq(sessions.id, id))
+      return session || null
+    },
 
-  async createSession(
-    params: Omit<CreateSession, 'id'>,
-  ): Promise<Partial<Session>> {
-    const values = insertSessionSchema.safeParse({
-      ...params,
-      id: createId(),
-    })
+    async createSession(
+      params: Omit<CreateSession, 'id'>,
+    ): Promise<Partial<Session>> {
+      const values = insertSessionSchema.safeParse({
+        ...params,
+        id: createId(),
+      })
 
-    if (!values.success) {
-      throw new Error('Invalid data')
-    }
+      if (!values.success) {
+        throw new Error('Invalid data')
+      }
 
-    const [session] = await db.insert(sessions).values(values.data).returning({
-      id: sessions.id,
-      userId: sessions.userId,
-      expiresAt: sessions.expiresAt,
-    })
+      const [session] = await db
+        .insert(sessions)
+        .values(values.data)
+        .returning({
+          id: sessions.id,
+          userId: sessions.userId,
+          expiresAt: sessions.expiresAt,
+        })
 
-    return session
-  },
+      return session
+    },
 
-  async deleteSession(id: string): Promise<void> {
-    await db.delete(sessions).where(eq(sessions.id, id))
-  },
+    async deleteSession(id: string): Promise<void> {
+      await db.delete(sessions).where(eq(sessions.id, id))
+    },
 
-  async deleteExpiredSessions(): Promise<void> {
-    const now = new Date()
-    await db.delete(sessions).where(lte(sessions.expiresAt, now))
-  },
-})
+    async deleteExpiredSessions(): Promise<void> {
+      const now = new Date()
+      await db.delete(sessions).where(lte(sessions.expiresAt, now))
+    },
+  }
+}
 
 export const sessionRepository = createSessionRepository()

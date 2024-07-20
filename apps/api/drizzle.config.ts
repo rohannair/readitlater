@@ -7,6 +7,7 @@ export default {
   dialect: 'postgresql',
   dbCredentials: {
     url: env.DB_URL ?? '',
+    port: 6543,
   },
   verbose: true,
   strict: true,

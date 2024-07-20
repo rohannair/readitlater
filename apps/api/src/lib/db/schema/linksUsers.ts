@@ -1,21 +1,20 @@
+import { categories } from '@/lib/db/schema/categories'
 import { links } from '@/lib/db/schema/links'
 import { users } from '@/lib/db/schema/users'
 import { relations } from 'drizzle-orm'
-import { pgTable, primaryKey, varchar } from 'drizzle-orm/pg-core'
+import { integer, pgTable, primaryKey, varchar } from 'drizzle-orm/pg-core'
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod'
 import type { z } from 'zod'
 
 export const linksUsers = pgTable(
   'links_users',
   {
-    linkId: varchar('link_id')
-      .notNull()
-      .references(() => links.id),
-    userId: varchar('user_id')
-      .notNull()
-      .references(() => users.id),
+    linkId: varchar('link_id').notNull(),
+    userId: varchar('user_id').notNull(),
+    categoryId: integer('category_id'),
     role: varchar('role', {
       length: 255,
+      enum: ['reader', 'submitter'],
     }),
   },
   (t) => ({
@@ -31,6 +30,10 @@ export const linksUsersRelations = relations(linksUsers, ({ one }) => ({
   user: one(users, {
     fields: [linksUsers.userId],
     references: [users.id],
+  }),
+  category: one(categories, {
+    fields: [linksUsers.categoryId],
+    references: [categories.id],
   }),
 }))
 

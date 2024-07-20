@@ -1,4 +1,5 @@
-import { linkRepository } from '@/lib/db/repositories/links.repository'
+import { client, db } from '@/lib/db'
+import { createLinkRepository } from '@/lib/db/repositories/links.repository'
 import { toMarkdown } from '@/lib/markdown/toMarkdown'
 import { fetchSite, getMainContent } from '@/lib/scraper'
 import { sanitizeHtml } from '@/lib/url'
@@ -30,7 +31,8 @@ export async function scrape({ url, link }: ScrapeWebsiteParams) {
     throw new Error('No main content found')
   }
 
-  await linkRepository.updateLink({
+  await client.connect()
+  await createLinkRepository(db).updateLink({
     id: link,
     body: toMarkdown(sanitizeHtml(mainContent)),
     title: $('title').text(),

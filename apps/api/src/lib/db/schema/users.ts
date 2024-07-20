@@ -1,7 +1,8 @@
-import { linksUsers } from '@/lib/db/schema/linksUsers'
+import { categories, linksUsers, tags } from '@/lib/db/schema'
 import { relations } from 'drizzle-orm'
 import { pgTable, timestamp, varchar } from 'drizzle-orm/pg-core'
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod'
+import type { z } from 'zod'
 
 export const users = pgTable('users', {
   id: varchar('id', {
@@ -25,7 +26,10 @@ export const users = pgTable('users', {
 
 export const usersRelations = relations(users, ({ many }) => ({
   links: many(linksUsers),
+  tags: many(tags),
+  categories: many(categories),
 }))
 
 export const insertUserSchema = createInsertSchema(users)
 export const selectUserSchema = createSelectSchema(users)
+export type User = z.infer<typeof selectUserSchema>

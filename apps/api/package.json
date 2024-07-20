@@ -28,18 +28,19 @@
     "@trigger.dev/sdk": "3.0.0-beta.50",
     "ai": "^3.2.19",
     "cheerio": "^1.0.0-rc.12",
-    "drizzle-orm": "^0.31.4",
+    "drizzle-orm": "^0.32.0",
     "drizzle-zod": "^0.5.1",
     "hono": "^4.4.12",
     "lucia": "^3.2.0",
-    "postgres": "^3.4.4",
+    "pg": "^8.12.0",
     "sanitize-html": "^2.13.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.8.3",
     "@types/bun": "latest",
-    "drizzle-kit": "^0.22.8"
+    "@types/pg": "^8.11.6",
+    "drizzle-kit": "^0.23.0"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"

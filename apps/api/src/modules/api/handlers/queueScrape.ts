@@ -1,4 +1,4 @@
-import { linkRepository } from '@/lib/db/repositories/links.repository'
+import { createLinkRepository } from '@/lib/db/repositories/links.repository'
 import type { Env } from '@/types'
 import { scrapeWebsite } from '@/workers/scrape-website'
 import { OpenAPIHono, createRoute, z } from '@hono/zod-openapi'
@@ -58,7 +58,7 @@ export const queueScrape = new OpenAPIHono<Env>().openapi(
       return c.json({ message: 'Not logged in' }, 401)
     }
 
-    const link = await linkRepository.createLink({
+    const link = await createLinkRepository(globalThis.db).createLink({
       url,
       userId: c.var.user?.id,
     })

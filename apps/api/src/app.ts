@@ -5,8 +5,9 @@ import { csrf } from 'hono/csrf'
 import { showRoutes } from 'hono/dev'
 import { logger } from 'hono/logger'
 import { env } from './env'
-import { authRouter } from './modules/auth'
+import { client, db } from './lib/db'
 import { apiRouter } from './modules/api'
+import { authRouter } from './modules/auth'
 import type { Env } from './types'
 
 export const app = new Hono<Env>()
