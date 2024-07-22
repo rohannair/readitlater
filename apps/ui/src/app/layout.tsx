@@ -13,7 +13,7 @@ const fontSans = Instrument_Sans({
   variable: '--font-sans',
 })
 
-Fragment_Mono({
+const _ = Fragment_Mono({
   subsets: ['latin'],
   variable: '--font-mono',
   weight: ['400'],
