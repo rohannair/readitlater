@@ -10,7 +10,7 @@ export const client = postgres(env.DB_URL)
 
 // biome-ignore lint/suspicious/noRedeclare: not a redeclaration
 export const db = drizzle(client, {
-  logger: env.ENABLE_SQL_LOGGING,
+  logger: false,
 })
 if (!globalThis.db) {
   globalThis.db = db

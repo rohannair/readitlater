@@ -11,7 +11,7 @@ const registerSchema = insertUserSchema
     passwordHash: true,
   })
   .extend({
-    email: z.string().email(),
+    email: z.string().email().toLowerCase(),
     password: z.string().min(8),
   })
 
