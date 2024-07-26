@@ -12,6 +12,7 @@ export const client = postgres(env.DB_URL)
 export const db = drizzle(client, {
   logger: false,
 })
+
 if (!globalThis.db) {
   globalThis.db = db
 }
