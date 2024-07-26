@@ -1,6 +1,6 @@
+import { Logomark } from '@/components/Logomark'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
-import Link from 'next/link'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,12 +9,14 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { BookmarkIcon, LogOutIcon, SettingsIcon, UserIcon } from 'lucide-react'
+import Link from 'next/link'
 
 export const Header = () => {
   return (
     <header className="bg-[#333] text-white px-4 md:px-6 py-4 flex items-center justify-between">
       <Link href="#" className="flex items-center gap-2" prefetch={false}>
-        <BookmarkIcon className="h-6 w-6" />
+        <Logomark />
+        {/* <BookmarkIcon className="h-6 w-6" /> */}
         <span className="text-xl font-semibold">Bookmark App</span>
       </Link>
       <nav className="flex items-center gap-4">

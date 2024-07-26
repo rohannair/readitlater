@@ -1,4 +1,5 @@
 'use client'
+// TODO: remove the client stuff into a subcomponent
 
 import { DialogLinkCreate } from '@/components/DialogLinkCreate'
 import { Button } from '@/components/ui/button'
@@ -54,7 +55,7 @@ export default function BookmarkLayout({
 
   return (
     <div className="grid grid-cols-12 min-h-screen">
-      <div className="flex flex-col col-span-2 border-r bg-muted/50 border-gray-600 p-4 relative">
+      <div className="flex flex-col col-span-2 border-r bg-muted/50 border-muted p-4 relative">
         <div className="sticky top-4">
           <Heading>Links</Heading>
           <nav>
@@ -67,7 +68,7 @@ export default function BookmarkLayout({
             <ListItem Icon={Boxes} href="#">
               Tags
             </ListItem>
-            <hr className="border-t border-gray-500 my-4 w-full h-[1px]" />
+            <hr className="border-t border-muted my-4 w-full h-[1px]" />
             <div className="my-4">
               <DialogTrigger asChild>
                 <Button size="sm" className="flex w-full">
@@ -80,8 +81,8 @@ export default function BookmarkLayout({
           </nav>
         </div>
       </div>
-      <div className="col-span-10 bg-white">
-        <div className="flex-grow bg-white text-gray-900">{children}</div>
+      <div className="col-span-10">
+        <div className="flex-grow">{children}</div>
       </div>
       <DialogLinkCreate />
     </div>

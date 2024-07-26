@@ -1,16 +1,41 @@
 import { db } from '@/lib/db'
 import { createLinkRepository } from '@/lib/db/repositories/links.repository'
-import { toMarkdown } from '@/lib/markdown/toMarkdown'
-import { fetchSite, getMainContent } from '@/lib/scraper'
-import { sanitizeHtml } from '@/lib/url'
-import { getSummary } from '@/workers/get-summary'
+import { fetchSite } from '@/lib/scraper'
+import * as getSummary from '@/workers/get-summary'
 import { task } from '@trigger.dev/sdk/v3'
-import * as cheerio from 'cheerio'
 
 interface ScrapeWebsiteParams {
   url: string
   link: string
 }
+
+// interface ParsedScrapeResult {
+//   title: string
+//   metadata: Record<string, string>
+//   body: string
+// }
+
+// function parseScrapeResult(text: string): ParsedScrapeResult {
+//   const lines = text.split('\n')
+//   const title = lines[0].replace('Title: ', '').trim()
+//   const metadata: Record<string, string> = {}
+//   let bodyStartIndex = 1
+
+//   for (let i = 1; i < lines.length; i++) {
+//     const line = lines[i]
+//     if (line.includes(':')) {
+//       const [key, value] = line.split(':').map((s) => s.trim())
+//       metadata[key] = value
+//       bodyStartIndex = i + 1
+//     } else {
+//       break
+//     }
+//   }
+
+//   const body = lines.slice(bodyStartIndex).join('\n').trim()
+
+//   return { title, metadata, body }
+// }
 
 export const scrapeWebsite = task({
   id: 'scrape-website',
@@ -23,26 +48,24 @@ export const scrapeWebsite = task({
 export async function scrape({ url, link }: ScrapeWebsiteParams) {
   const linkRepository = await createLinkRepository(db)
   try {
-    const body = await fetchSite(url)
-    const $ = cheerio.load(body)
+    const {
+      data: { title, content: body },
+    } = await fetchSite(url)
 
-    // Extract the main content (this can be adapted based on the structure of the target websites)
-    const mainContent = getMainContent($)
-
-    if (!mainContent) {
+    if (!body) {
       throw new Error('No main content found')
     }
 
     await linkRepository.updateLink({
       id: link,
-      body: toMarkdown(sanitizeHtml(mainContent)),
-      title: $('title').text(),
+      body,
+      title: title,
       status: 'processing',
     })
 
-    await getSummary.trigger({
+    await getSummary.getSummary.trigger({
       id: link,
-      document: mainContent,
+      document: body,
     })
   } catch (error) {
     await linkRepository.updateLink({

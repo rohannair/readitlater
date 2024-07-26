@@ -1,7 +1,36 @@
+import { selectLinkSchema } from '@/lib/db'
 import { createLinkRepository } from '@/lib/db/repositories/links.repository'
 import type { Env } from '@/types'
 import { scrapeWebsite } from '@/workers/scrape-website'
 import { OpenAPIHono, createRoute, z } from '@hono/zod-openapi'
+
+interface ParsedScrapeResult {
+  title: string
+  metadata: Record<string, string>
+  body: string
+}
+
+export function parseScrapeResult(text: string): ParsedScrapeResult {
+  const lines = text.split('\n')
+  const title = lines[0].replace('Title: ', '').trim()
+  const metadata: Record<string, string> = {}
+  let bodyStartIndex = 1
+
+  for (let i = 1; i < lines.length; i++) {
+    const line = lines[i]
+    if (line.includes(':')) {
+      const [key, value] = line.split(':').map((s) => s.trim())
+      metadata[key] = value
+      bodyStartIndex = i + 1
+    } else {
+      break
+    }
+  }
+
+  const body = lines.slice(bodyStartIndex).join('\n').trim()
+
+  return { title, metadata, body }
+}
 
 export const queueScrape = new OpenAPIHono<Env>().openapi(
   createRoute({
@@ -25,6 +54,7 @@ export const queueScrape = new OpenAPIHono<Env>().openapi(
           'application/json': {
             schema: z.object({
               message: z.string(),
+              data: z.undefined().or(selectLinkSchema.partial()),
             }),
           },
         },
@@ -51,6 +81,7 @@ export const queueScrape = new OpenAPIHono<Env>().openapi(
       },
     },
   }),
+  // @ts-ignore
   async (c) => {
     const { url } = c.req.valid('json')
 
@@ -62,7 +93,9 @@ export const queueScrape = new OpenAPIHono<Env>().openapi(
       return c.json({ message: 'This site is not yet supported' }, 400)
     }
 
-    const link = await createLinkRepository().createLink({
+    const links = await createLinkRepository()
+
+    const link = await links.createLink({
       url,
       userId: c.var.user?.id,
     })
@@ -72,15 +105,15 @@ export const queueScrape = new OpenAPIHono<Env>().openapi(
     }
 
     if (!link.summary) {
-      const handle = await scrapeWebsite.trigger({
+      await scrapeWebsite.trigger({
         url: url,
         link: link.id,
       })
 
-      return c.json({ message: 'Queued', handle }, 200)
+      return c.json({ message: 'Queued', data: { link } }, 200)
     }
 
-    return c.json({ message: 'Link exists' }, 200)
+    return c.json({ message: 'Link exists', data: { link } }, 200)
   },
 )
 

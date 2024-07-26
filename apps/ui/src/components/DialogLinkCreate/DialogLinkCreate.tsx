@@ -20,6 +20,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { createUrl } from '@/lib/api/calls/createUrl'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { redirect } from 'next/navigation'
 import { useRouter } from 'next/router'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
@@ -42,13 +43,14 @@ export const DialogLinkCreate = () => {
   const submit = async (values: z.infer<typeof linkCreateSchema>) => {
     try {
       await createUrl(values)
-      const router = useRouter()
-      router.push('/bookmarks')
     } catch (_) {
       console.error('Failed to create URL')
       return
     } finally {
       close()
+      // const router = useRouter()
+
+      redirect('/bookmarks')
     }
   }
 
