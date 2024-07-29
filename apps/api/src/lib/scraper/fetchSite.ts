@@ -2,10 +2,10 @@ import { env } from '@/env'
 
 export async function fetchSite(url: string) {
   try {
-    const resp = await fetch(`https://r.jina.ai/${url}`, {
+    const resp = await fetch(`https://r.jin.ai/${url}`, {
       headers: {
-        Authorization: `Bearer ${env.JINA_API_KEY}`,
         Accept: 'application/json',
+        Authorization: `Bearer ${env.JINA_API_KEY}`,
       },
     })
 

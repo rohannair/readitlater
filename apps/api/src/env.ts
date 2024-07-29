@@ -9,7 +9,7 @@ export const env = createEnv({
       .default('development'),
     DB_URL: z.string().min(1),
     ENABLE_SQL_LOGGING: z.boolean().default(false),
-    JINA_API_KEY: z.string(),
+    JINA_API_KEY: z.string().min(1),
   },
   experimental__runtimeEnv: {},
 })
