@@ -9,14 +9,8 @@ export const getLinksByUser = new OpenAPIHono<Env>().openapi(
     path: '/',
     request: {
       query: z.object({
-        page: z.preprocess(
-          (a) => Number.parseInt(a as string, 10),
-          z.number().int().min(1),
-        ),
-        pageSize: z.preprocess(
-          (a) => Number.parseInt(a as string, 10),
-          z.number().int().min(1),
-        ),
+        page: z.coerce.number().int().min(1),
+        pageSize: z.coerce.number().int().min(1).default(10),
       }),
     },
     responses: {

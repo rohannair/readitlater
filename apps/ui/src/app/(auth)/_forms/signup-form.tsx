@@ -2,7 +2,7 @@
 
 import { FormInput } from '@/app/(auth)/_forms/form-input'
 import { Button } from '@/components/ui/button'
-import { createUser } from '@/lib/api/calls/createUser'
+import { signup } from '@/actions/signup'
 import { useForm } from '@conform-to/react'
 import { parseWithZod } from '@conform-to/zod'
 import { redirect } from 'next/navigation'
@@ -41,7 +41,7 @@ async function submitCreateUser(_prevState: unknown, formData: FormData) {
 
   const { redirect: redirectUrl, ...value } = result.value
 
-  await createUser(value)
+  await signup(value)
 
   redirect(redirectUrl)
 }

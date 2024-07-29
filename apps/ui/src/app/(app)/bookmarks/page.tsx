@@ -1,36 +1,26 @@
-'use client'
-
 import { LinkList } from '@/components/LinkList'
 import { getLinksForUser } from '@/lib/api/calls/getLinksForUser'
-import React, { useEffect, useState } from 'react'
 
-export default function LinksPage() {
-  const [links, setLinks] = useState<any[]>([])
-  const [pagination, setPagination] = useState({})
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+interface LinksPageParams {
+  searchParams: { [key: string]: string | string[] | undefined }
+}
 
-  useEffect(() => {
-    async function fetchLinks() {
-      try {
-        setIsLoading(true)
-        const { links: fetchedLinks, pagination: fetchedPagination } =
-          await getLinksForUser()
-        setLinks(fetchedLinks || [])
-        setPagination(fetchedPagination)
-      } catch (err) {
-        setError('Failed to fetch links. Please try again later.')
-        console.error('Error fetching links:', err)
-      } finally {
-        setIsLoading(false)
-      }
-    }
+export default async function LinksPage({ searchParams }: LinksPageParams) {
+  const page: number = Number(searchParams.page) || 1
+  const pageSize: number = Number(searchParams.pageSize) || 10
+  const sort = (searchParams.sort || 'createdAt') as string
+  const direction = (searchParams.direction || 'desc') as string
+  const search = (searchParams.search || '') as string
 
-    fetchLinks()
-  }, [])
+  const { links, pagination } = await getLinksForUser({
+    page: page.toString(),
+    pageSize: pageSize.toString(),
+    sort,
+    direction,
+    search,
+  })
 
-  if (isLoading) return <div className="p-4">Loading...</div>
-  if (error) return <div className="p-4">Error: {error}</div>
+  if (!links) return <div className="p-4">Loading...</div>
 
   return <LinkList links={links} pagination={pagination} />
 }

@@ -1,15 +1,8 @@
-'use client'
-// TODO: remove the client stuff into a subcomponent
-
 import { DialogLinkCreate } from '@/components/DialogLinkCreate'
 import { Button } from '@/components/ui/button'
 import { DialogTrigger } from '@/components/ui/dialog'
-import { ScrollArea } from '@/components/ui/scroll-area'
-import { getLinksForUser } from '@/lib/api/calls/getLinksForUser'
 import { Boxes, Link as LinkIcon, Tags } from 'lucide-react'
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
-import { Links } from './_components/Links'
 
 function Heading({ children }: { children: string }) {
   return <h3 className="font-semibold text-white mb-2">{children}</h3>
@@ -38,20 +31,14 @@ function ListItem({
   )
 }
 
-export default function BookmarkLayout({
+export default async function BookmarkLayout({
   children,
-}: { children: React.ReactNode }) {
-  const [links, setLinks] = useState<any>(null)
-  const [pagination, setPagination] = useState<any>(null)
-
-  useEffect(() => {
-    async function fetchLinks() {
-      const { links, pagination } = await getLinksForUser()
-      setLinks(links)
-      setPagination(pagination)
-    }
-    fetchLinks()
-  }, [])
+}: {
+  children: Readonly<React.ReactNode>
+}) {
+  const pagination = {
+    totalCount: 100,
+  }
 
   return (
     <div className="grid grid-cols-12 min-h-screen">
@@ -77,7 +64,7 @@ export default function BookmarkLayout({
               </DialogTrigger>
             </div>
 
-            <Links links={links} />
+            {/* <Links links={links} /> */}
           </nav>
         </div>
       </div>
