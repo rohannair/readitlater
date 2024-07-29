@@ -1,15 +1,44 @@
-'use client'
-
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationNext,
+  PaginationPrevious,
+} from '@/components/ui/pagination'
 import { LinkListActions } from '@/components/LinkList/LinkListActions'
 import { LinkListItem } from '@/components/LinkList/LinkListItem'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { SearchIcon } from 'lucide-react'
+import { createPaginationQueryString } from '@/lib/utils'
 
-export function LinkList({ links }: { links: any[]; pagination: any }) {
+interface Link {
+  id: string
+  title: string
+  url: string
+  summary: string
+  tags: { key: string; label: string }[]
+  createdAt: string
+}
+
+interface IPagination {
+  page: number
+  pageSize: number
+  totalCount: number
+  totalPages: number
+}
+
+interface LinkListProps {
+  links: Link[]
+  pagination: IPagination
+}
+
+const getPaginationUrl = createPaginationQueryString('/bookmarks')
+
+export async function LinkList({ links, pagination }: LinkListProps) {
   return (
     <div className="flex flex-col min-h-screen">
-      <div className="flex-1 flex">
+      <div className="flex-1 flex flex-col">
         <main className="flex-1 p-4 md:p-6">
           <div className="flex items-center justify-between mb-4">
             <h1 className="text-2xl font-bold">Bookmarks</h1>
@@ -42,6 +71,31 @@ export function LinkList({ links }: { links: any[]; pagination: any }) {
             </div>
           </div>
         </main>
+
+        <aside className="flex my-4 mx-auto w-full justify-center">
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious
+                  href={getPaginationUrl({
+                    page: (pagination.page - 1).toString(),
+                  })}
+                >
+                  Previous
+                </PaginationPrevious>
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationNext
+                  href={getPaginationUrl({
+                    page: (pagination.page + 1).toString(),
+                  })}
+                >
+                  Previous
+                </PaginationNext>
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        </aside>
       </div>
     </div>
   )

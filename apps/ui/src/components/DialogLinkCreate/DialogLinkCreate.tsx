@@ -18,10 +18,9 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { createUrl } from '@/lib/api/calls/createUrl'
+import { createUrl } from '@/actions/create-url'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { redirect } from 'next/navigation'
-import { useRouter } from 'next/router'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
