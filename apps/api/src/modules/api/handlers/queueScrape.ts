@@ -106,7 +106,7 @@ export const queueScrape = new OpenAPIHono<Env>().openapi(
 
     if (!link.summary) {
       await scrapeWebsite.trigger({
-        url: url,
+        url,
         link: link.id,
       })
 

@@ -19,6 +19,7 @@ export const links = pgTable('links', {
   })
     .default('submitted')
     .notNull(),
+  statusReason: text('status_reason'),
   cleaned: text('cleaned'),
   summary: text('summary'),
   createdAt: timestamp('created_at').defaultNow().notNull(),

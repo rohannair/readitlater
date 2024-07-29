@@ -12,6 +12,7 @@ interface LinkRepository {
     title?: string
     summary?: string
     status?: 'submitted' | 'processing' | 'completed' | 'error'
+    statusReason?: string
   }): Promise<Link>
   getAllForUser(
     userId: string,
@@ -72,7 +73,7 @@ export const createLinkRepository = (
       })
     },
 
-    async updateLink({ id, body, title, summary, status }) {
+    async updateLink({ id, body, title, summary, status, statusReason }) {
       const [link] = await db
         .update(links)
         .set({
@@ -80,6 +81,7 @@ export const createLinkRepository = (
           ...(title ? { title } : null),
           ...(summary ? { summary } : null),
           ...(status ? { status } : null),
+          ...(statusReason ? { statusReason } : null),
           updatedAt: sql`now()`,
         })
         .where(eq(links.id, id))

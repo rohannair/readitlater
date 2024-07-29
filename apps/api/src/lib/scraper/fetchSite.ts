@@ -2,7 +2,8 @@ import { env } from '@/env'
 
 export async function fetchSite(url: string) {
   try {
-    const resp = await fetch(`https://r.jin.ai/${url}`, {
+    console.log('fetching', url)
+    const resp = await fetch(`https://r.jina.ai/${url}`, {
       headers: {
         Accept: 'application/json',
         Authorization: `Bearer ${env.JINA_API_KEY}`,
@@ -10,6 +11,7 @@ export async function fetchSite(url: string) {
     })
 
     if (!resp.ok) {
+      console.error('Failed to fetch', url)
       throw new Error('Failed to fetch')
     }
 
