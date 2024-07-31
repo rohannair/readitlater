@@ -38,6 +38,7 @@
     "pg": "^8.12.0",
     "postgres": "^3.4.4",
     "sanitize-html": "^2.13.0",
+    "ts-pattern": "^5.2.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {
