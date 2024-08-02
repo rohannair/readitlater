@@ -1,3 +1,4 @@
+import { StatusIcon, type LinkStatus } from '@/components/StatusIcon/StatusIcon'
 import { formatRelative } from 'date-fns'
 import Link from 'next/link'
 import type { MouseEventHandler } from 'react'
@@ -9,6 +10,7 @@ interface LinkListItemProps {
   title: string
   url: string
   summary: string
+  status: LinkStatus
   tags?: { key: string; label: string }[]
   createdAt: string
 }
@@ -16,8 +18,15 @@ interface LinkListItemProps {
 export const LinkListItem = (props: LinkListItemProps) => {
   return (
     <Link href={props.href} className="block p-2" prefetch={props.prefetch}>
-      <h3 className="font-semibold text-lg truncate">{props.title}</h3>
-      <div className="text-sm text-muted-foreground">{props.url}</div>
+      <div className="flex flex-row gap-1 items-baseline">
+        <h3 className="font-semibold text-lg truncate">
+          {props.title ?? props.url}
+        </h3>
+        <StatusIcon status={props.status} />
+      </div>
+      <div className="text-sm text-muted-foreground">
+        {props.title ? props.url : null}
+      </div>
       <div className="text-sm text-foreground">
         Added {formatRelative(props.createdAt, new Date())}
       </div>

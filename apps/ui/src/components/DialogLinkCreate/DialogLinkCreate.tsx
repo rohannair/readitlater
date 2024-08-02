@@ -20,9 +20,10 @@ import {
 import { Input } from '@/components/ui/input'
 import { createUrl } from '@/actions/create-url'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { redirect } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
+import { useState } from 'react'
 
 const linkCreateSchema = z.object({
   url: z.preprocess(
@@ -32,6 +33,9 @@ const linkCreateSchema = z.object({
 })
 
 export const DialogLinkCreate = () => {
+  const router = useRouter()
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
   const form = useForm<z.infer<typeof linkCreateSchema>>({
     resolver: zodResolver(linkCreateSchema),
     defaultValues: {
@@ -40,16 +44,16 @@ export const DialogLinkCreate = () => {
   })
 
   const submit = async (values: z.infer<typeof linkCreateSchema>) => {
+    setIsSubmitting(true)
     try {
       await createUrl(values)
+      router.push('/bookmarks')
+      router.refresh()
     } catch (_) {
       console.error('Failed to create URL')
-      return
     } finally {
-      close()
-      // const router = useRouter()
-
-      redirect('/bookmarks')
+      form.reset()
+      setIsSubmitting(false)
     }
   }
 
@@ -57,9 +61,7 @@ export const DialogLinkCreate = () => {
     <DialogContent>
       <DialogHeader>
         <DialogTitle>New Bookmark</DialogTitle>
-        <DialogDescription>
-          Add a new bookmark manually. You can also use the bookmarklet.
-        </DialogDescription>
+        <DialogDescription>Add a new bookmark manually.</DialogDescription>
       </DialogHeader>
       <Form {...form}>
         <form className="grid gap-4 py-4" onSubmit={form.handleSubmit(submit)}>
@@ -84,7 +86,9 @@ export const DialogLinkCreate = () => {
               <Button variant="link">Close</Button>
             </DialogClose>
             <DialogClose asChild>
-              <Button type="submit">Submit URL</Button>
+              <Button type="submit" disabled={isSubmitting}>
+                {isSubmitting ? 'Submitting...' : 'Submit URL'}
+              </Button>
             </DialogClose>
           </DialogFooter>
         </form>

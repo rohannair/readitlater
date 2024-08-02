@@ -37,6 +37,9 @@ export const queueScrape = new OpenAPIHono<Env>().openapi(
     method: 'post',
     path: '/',
     request: {
+      query: z.object({
+        retry: z.boolean().optional().default(false),
+      }),
       body: {
         content: {
           'application/json': {
@@ -84,6 +87,7 @@ export const queueScrape = new OpenAPIHono<Env>().openapi(
   // @ts-ignore
   async (c) => {
     const { url } = c.req.valid('json')
+    const { retry } = c.req.valid('query')
 
     if (!c.var.user?.id) {
       return c.json({ message: 'Not logged in' }, 401)
@@ -93,8 +97,7 @@ export const queueScrape = new OpenAPIHono<Env>().openapi(
       return c.json({ message: 'This site is not yet supported' }, 400)
     }
 
-    const links = await createLinkRepository()
-
+    const links = createLinkRepository()
     const link = await links.createLink({
       url,
       userId: c.var.user?.id,
@@ -104,7 +107,7 @@ export const queueScrape = new OpenAPIHono<Env>().openapi(
       return c.json({ message: 'Something went wrong' }, 400)
     }
 
-    if (!link.summary) {
+    if (retry || !link.summary) {
       await scrapeWebsite.trigger({
         url,
         link: link.id,

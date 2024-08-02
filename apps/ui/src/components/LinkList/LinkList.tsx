@@ -11,12 +11,14 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { SearchIcon } from 'lucide-react'
 import { createPaginationQueryString } from '@/lib/utils'
+import type { LinkStatus } from '@/components/StatusIcon/StatusIcon'
 
 interface Link {
   id: string
   title: string
   url: string
   summary: string
+  status: LinkStatus
   tags: { key: string; label: string }[]
   createdAt: string
 }
@@ -66,6 +68,7 @@ export async function LinkList({ links, pagination }: LinkListProps) {
                   summary={link.summary}
                   tags={link.tags}
                   createdAt={link.createdAt}
+                  status={link.status}
                 />
               ))}
             </div>

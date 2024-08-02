@@ -27,6 +27,12 @@ export async function getLinksForUser(props: GetLinkProps) {
 
   const response = await client.api.v1.links.$get({
     query,
+  },{
+    init: {
+      next: {
+        revalidate: 100
+      }
+    }
   })
 
   if (!response.ok) {

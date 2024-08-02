@@ -2,7 +2,6 @@ import { env } from '@/env'
 
 export async function fetchSite(url: string) {
   try {
-    console.log('fetching', url)
     const resp = await fetch(`https://r.jina.ai/${url}`, {
       headers: {
         Accept: 'application/json',

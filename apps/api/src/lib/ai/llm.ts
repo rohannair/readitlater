@@ -36,7 +36,7 @@ export const summarizeDocument = async (document: string) => {
   const { text } = await generateText({
     model: openai(LATEST_MODEL),
     system: "",
-    prompt: `summarize the following document in 1-2 paragraphs:\n${document}`,
+    prompt: `summarize the following document in 2-3 paragraphs of 1-2 sentences:\n${document}`,
   });
 
   return text;
