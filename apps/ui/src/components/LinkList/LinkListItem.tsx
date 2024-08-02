@@ -1,5 +1,7 @@
 import { StatusIcon, type LinkStatus } from '@/components/StatusIcon/StatusIcon'
+import { AspectRatio } from '@/components/ui/aspect-ratio'
 import { formatRelative } from 'date-fns'
+import Image from 'next/image'
 import Link from 'next/link'
 import type { MouseEventHandler } from 'react'
 
@@ -24,14 +26,17 @@ export const LinkListItem = (props: LinkListItemProps) => {
       prefetch={props.prefetch}
     >
       <section className="col-span-3 flex border rounded-md overflow-hidden group-hover:border-muted-foreground">
-        <img
-          src={
-            props.imageUrl ??
-            '//placehold.co/250x167?text=No+Image&font=Source+Sans+Pro'
-          }
-          className="block w-full h-auto object-cover"
-          alt={props.title ?? props.url}
-        />
+        <AspectRatio ratio={16 / 9} className="w-full">
+          <Image
+            src={
+              props.imageUrl ??
+              '//placehold.co/250x167?text=No+Image&font=Source+Sans+Pro'
+            }
+            fill
+            className="object-cover"
+            alt={props.title ?? props.url}
+          />
+        </AspectRatio>
       </section>
       <section className="col-span-8">
         <div className="flex flex-row gap-1 items-baseline">

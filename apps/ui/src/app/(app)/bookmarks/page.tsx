@@ -20,7 +20,5 @@ export default async function LinksPage({ searchParams }: LinksPageParams) {
     search,
   })
 
-  if (!links) return <div className="p-4">Loading...</div>
-
-  return <LinkList links={links} pagination={pagination} />
+  return <LinkList links={links ?? []} pagination={pagination} />
 }

@@ -39,8 +39,8 @@ export async function getLinksForUser(props: GetLinkProps) {
   )
 
   if (!response.ok) {
-    console.error(await response.text())
-    throw new Error('Failed to fetch links')
+    const error = await response.json()
+    throw error
   }
 
   return await response.json()

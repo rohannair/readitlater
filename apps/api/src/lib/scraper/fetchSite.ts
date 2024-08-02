@@ -10,7 +10,6 @@ export async function fetchSite(url: string) {
     })
 
     if (!resp.ok) {
-      console.error('Failed to fetch', url)
       throw new Error('Failed to fetch')
     }
 

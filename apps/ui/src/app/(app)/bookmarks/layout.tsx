@@ -1,6 +1,7 @@
 import { DialogLinkCreate } from '@/components/DialogLinkCreate'
 import { Button } from '@/components/ui/button'
 import { DialogTrigger } from '@/components/ui/dialog'
+import { getLinksMetadata } from '@/lib/api/calls/getLinksMetadata'
 import { Boxes, Link as LinkIcon, Tags } from 'lucide-react'
 import Link from 'next/link'
 
@@ -22,11 +23,13 @@ function ListItem({
   return (
     <Link
       href={href}
-      className="py-1 flex flex-row gap-2 items-center text-gray-400 hover:text-gray-300"
+      className="grid grid-cols-6 py-1 gap-2 items-center text-gray-400 hover:text-primary text-sm"
     >
-      <Icon className="size-4" />
-      <span className="text-gray-400 hover:text-gray-300">{children}</span>
-      <div className="ml-auto">{count}</div>
+      <Icon className="col-span-1 size-4" />
+      <span className="col-span-4">{children}</span>
+      <div className="col-span-1 rounded-full  bg-primary/5 text-xs font-bold py-1 text-center">
+        {count}
+      </div>
     </Link>
   )
 }
@@ -36,23 +39,21 @@ export default async function BookmarkLayout({
 }: {
   children: Readonly<React.ReactNode>
 }) {
-  const pagination = {
-    totalCount: 100,
-  }
+  const { linksCount, categoriesCount, tagsCount } = await getLinksMetadata()
 
   return (
     <div className="grid grid-cols-12 min-h-screen">
-      <div className="flex flex-col col-span-2 border-r bg-muted/50 border-muted p-4 relative">
+      <div className="flex flex-col col-span-2 border-r bg-muted/60 border-muted p-4 relative">
         <div className="sticky top-4">
           <Heading>Links</Heading>
           <nav>
-            <ListItem Icon={LinkIcon} href="#" count={pagination?.totalCount}>
+            <ListItem Icon={LinkIcon} href="/bookmarks" count={linksCount}>
               All
             </ListItem>
-            <ListItem Icon={Tags} href="#">
+            <ListItem Icon={Tags} href="#" count={categoriesCount}>
               Categories
             </ListItem>
-            <ListItem Icon={Boxes} href="#">
+            <ListItem Icon={Boxes} href="#" count={tagsCount}>
               Tags
             </ListItem>
             <hr className="border-t border-muted my-4 w-full h-[1px]" />

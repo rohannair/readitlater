@@ -1,3 +1,4 @@
+import { integer } from 'drizzle-orm/pg-core'
 import { type Link, links, linksUsers, users } from '@/lib/db/schema'
 import { stripQueryParams } from '@/lib/url'
 import { createId } from '@paralleldrive/cuid2'
@@ -37,6 +38,11 @@ interface LinkRepository {
     Partial<Link> | undefined
   >
   deleteForUser(params: { linkId: string; userId: string }): Promise<void>
+  getMetadata(id: string): Promise<{
+    linksCount: number
+    categoriesCount: number
+    tagsCount: number
+  }>
 }
 
 export const createLinkRepository = (
@@ -174,6 +180,16 @@ export const createLinkRepository = (
         .where(
           and(eq(linksUsers.linkId, linkId), eq(linksUsers.userId, userId)),
         )
+    },
+    async getMetadata(id) {
+      const [data] = await db
+        .select({
+          linksCount: sql<number>`cast(count(${linksUsers.linkId}) as int)`,
+        })
+        .from(linksUsers)
+        .where(eq(linksUsers.userId, id))
+
+      return { ...data, categoriesCount: 0, tagsCount: 0 }
     },
   }
 }
