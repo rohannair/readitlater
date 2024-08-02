@@ -5,7 +5,7 @@ import { Boxes, Link as LinkIcon, Tags } from 'lucide-react'
 import Link from 'next/link'
 
 function Heading({ children }: { children: string }) {
-  return <h3 className="font-semibold text-white mb-2">{children}</h3>
+  return <h3 className="font-semibold mb-2">{children}</h3>
 }
 
 function ListItem({
@@ -63,8 +63,6 @@ export default async function BookmarkLayout({
                 </Button>
               </DialogTrigger>
             </div>
-
-            {/* <Links links={links} /> */}
           </nav>
         </div>
       </div>
