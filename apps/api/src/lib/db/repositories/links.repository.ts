@@ -1,16 +1,22 @@
 import { type Link, links, linksUsers, users } from '@/lib/db/schema'
 import { stripQueryParams } from '@/lib/url'
 import { createId } from '@paralleldrive/cuid2'
+import { image } from '@tensorflow/tfjs-node'
 import { and, desc, eq, sql } from 'drizzle-orm'
 import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js'
 
 interface LinkRepository {
-  createLink(input: { url: string; userId: string }): Promise<Partial<Link>>
+  createLink(input: {
+    url: string
+    userId: string
+    imageUrl?: string
+  }): Promise<Partial<Link>>
   updateLink(params: {
     id: string
     body?: string
     title?: string
     summary?: string
+    imageUrl?: string
     status?: 'submitted' | 'processing' | 'completed' | 'error'
     statusReason?: string
   }): Promise<Link>
@@ -37,7 +43,7 @@ export const createLinkRepository = (
 ): LinkRepository => {
   const db = client ?? globalThis.db
   return {
-    async createLink({ url, userId }) {
+    async createLink({ url, userId, imageUrl }) {
       if (!url) {
         throw new Error('URL is required')
       }
@@ -48,6 +54,7 @@ export const createLinkRepository = (
           .values({
             id: createId(),
             url: stripQueryParams(url),
+            ...(imageUrl ? { imageUrl } : null),
           })
           .onConflictDoUpdate({
             target: links.url,
@@ -73,7 +80,15 @@ export const createLinkRepository = (
       })
     },
 
-    async updateLink({ id, body, title, summary, status, statusReason }) {
+    async updateLink({
+      id,
+      body,
+      title,
+      summary,
+      status,
+      statusReason,
+      imageUrl,
+    }) {
       const [link] = await db
         .update(links)
         .set({
@@ -82,6 +97,7 @@ export const createLinkRepository = (
           ...(summary ? { summary } : null),
           ...(status ? { status } : null),
           ...(statusReason ? { statusReason } : null),
+          ...(imageUrl ? { imageUrl } : null),
           updatedAt: sql`now()`,
         })
         .where(eq(links.id, id))
@@ -98,6 +114,7 @@ export const createLinkRepository = (
           id: links.id,
           url: links.url ?? '',
           title: links.title ?? '',
+          imageUrl: links.imageUrl ?? '',
           status: links.status,
           createdAt: links.createdAt,
         })

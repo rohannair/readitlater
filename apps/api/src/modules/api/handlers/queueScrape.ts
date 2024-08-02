@@ -3,6 +3,7 @@ import { createLinkRepository } from '@/lib/db/repositories/links.repository'
 import type { Env } from '@/types'
 import { scrapeWebsite } from '@/workers/scrape-website'
 import { OpenAPIHono, createRoute, z } from '@hono/zod-openapi'
+import ogs from 'open-graph-scraper'
 
 interface ParsedScrapeResult {
   title: string
@@ -97,10 +98,17 @@ export const queueScrape = new OpenAPIHono<Env>().openapi(
       return c.json({ message: 'This site is not yet supported' }, 400)
     }
 
+    const { result } = await ogs({ url })
+    const imageUrl =
+      result.ogImage && result?.ogImage?.length > 0
+        ? result.ogImage[0].url
+        : undefined
+
     const links = createLinkRepository()
     const link = await links.createLink({
       url,
       userId: c.var.user?.id,
+      imageUrl,
     })
 
     if (!link?.id) {
