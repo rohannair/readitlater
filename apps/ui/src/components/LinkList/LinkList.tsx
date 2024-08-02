@@ -17,6 +17,7 @@ interface Link {
   id: string
   title: string
   url: string
+  imageUrl?: string
   summary: string
   status: LinkStatus
   tags: { key: string; label: string }[]
@@ -65,6 +66,7 @@ export async function LinkList({ links, pagination }: LinkListProps) {
                   href={`/bookmarks/${link.id}`}
                   title={link.title}
                   url={link.url}
+                  imageUrl={link.imageUrl}
                   summary={link.summary}
                   tags={link.tags}
                   createdAt={link.createdAt}
