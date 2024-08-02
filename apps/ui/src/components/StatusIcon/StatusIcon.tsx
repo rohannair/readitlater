@@ -1,3 +1,5 @@
+import { Tooltip, TooltipTrigger } from '@/components/ui/tooltip'
+import { TooltipContent } from '@radix-ui/react-tooltip'
 import {
   CircleCheckIcon,
   CircleDashedIcon,
@@ -11,22 +13,50 @@ export function StatusIcon({ status }: { status: LinkStatus }) {
   return match(status)
     .with('submitted', () => (
       <span className="text-yellow-500">
-        <CircleDashedIcon className="size-3" />
+        <Tooltip>
+          <TooltipTrigger>
+            <CircleDashedIcon className="size-3" />
+          </TooltipTrigger>
+          <TooltipContent>
+            <div className="text-xs mb-1">Submitted</div>
+          </TooltipContent>
+        </Tooltip>
       </span>
     ))
     .with('processing', () => (
       <span className="text-yellow-500">
-        <CircleDotDashedIcon className="size-3" />
+        <Tooltip>
+          <TooltipTrigger>
+            <CircleDotDashedIcon className="size-3" />
+          </TooltipTrigger>
+          <TooltipContent>
+            <div className="text-xs mb-1">Processing</div>
+          </TooltipContent>
+        </Tooltip>
       </span>
     ))
     .with('completed', () => (
       <span className="text-green-500">
-        <CircleCheckIcon className="size-3" />
+        <Tooltip>
+          <TooltipTrigger>
+            <CircleCheckIcon className="size-3" />
+          </TooltipTrigger>
+          <TooltipContent>
+            <div className="text-xs mb-1">Completed</div>
+          </TooltipContent>
+        </Tooltip>
       </span>
     ))
     .otherwise(() => (
       <span className="text-red-500">
-        <CircleXIcon className="size-3" />
+        <Tooltip>
+          <TooltipTrigger>
+            <CircleXIcon className="size-3" />
+          </TooltipTrigger>
+          <TooltipContent>
+            <div className="text-xs mb-1">Error</div>
+          </TooltipContent>
+        </Tooltip>
       </span>
     ))
 }
