@@ -2,15 +2,15 @@
   "name": "readitlater",
   "author": "Rohan Nair <rn@rohan.ai>",
   "license": "AGPL-3.0-only",
-  "workspaces": [
-    "packages/*",
-    "apps/*"
-  ],
+  "packageManager": "npm@10.8.1",
   "scripts": {
     "dev": "bun --filter '*' dev"
   },
   "trustedDependencies": [
     "@tensorflow/tfjs-node"
   ],
-  "packageManager": "npm@10.8.1"
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ]
 }

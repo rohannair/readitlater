@@ -4,11 +4,10 @@ import ActionBar from './_components/ActionBar'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { getLink } from '@/lib/api/calls/getLink'
-import { cn } from '@/lib/utils'
 import { formatRelative } from 'date-fns'
 import { ArrowBigLeft } from 'lucide-react'
 import Link from 'next/link'
-import Markdown from 'react-markdown'
+import { Markdown } from '@/components/Markdown'
 
 export default async function BookmarkDetails({
   params: { id },
@@ -47,15 +46,7 @@ export default async function BookmarkDetails({
       </section>
 
       <section className="grid grid-cols-12 relative">
-        <Markdown
-          className={cn(
-            'col-span-8 prose prose-invert prose-gray max-w-none prose-p:text-foreground/80',
-            'border-r border-muted pl-4 pt-6 pr-6 pb-10',
-            'zwj-hide',
-          )}
-        >
-          {cleaned}
-        </Markdown>
+        <Markdown>{cleaned}</Markdown>
 
         <div className="col-span-4 flex flex-col gap-4 relative px-2 pt-6">
           <div className="pr-4">

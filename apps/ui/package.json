@@ -46,6 +46,7 @@
     "react-dom": "^18",
     "react-hook-form": "^7.52.1",
     "react-markdown": "^9.0.1",
+    "rehype-highlight": "^7.0.0",
     "sanitize-html": "^2.13.0",
     "set-cookie-parser": "^2.6.0",
     "sonner": "^1.5.0",
