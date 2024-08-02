@@ -8,6 +8,9 @@ export async function createUrl(json: {
   const client = await createServerApiClient()
   const res = await client.api.v1.links.$post({
     json,
+    query: {
+      retry: undefined,
+    },
   })
 
   if (!res.ok) {

@@ -25,15 +25,18 @@ export async function getLinksForUser(props: GetLinkProps) {
   const client = await createServerApiClient()
   const query = getLinkSchema.parse(props)
 
-  const response = await client.api.v1.links.$get({
-    query,
-  },{
-    init: {
-      next: {
-        revalidate: 100
-      }
-    }
-  })
+  const response = await client.api.v1.links.$get(
+    {
+      query,
+    },
+    {
+      init: {
+        next: {
+          revalidate: 10,
+        },
+      },
+    },
+  )
 
   if (!response.ok) {
     console.error(await response.text())

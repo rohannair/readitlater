@@ -36,6 +36,7 @@ interface LinkRepository {
   getById(params: { linkId: string; userId: string }): Promise<
     Partial<Link> | undefined
   >
+  deleteForUser(params: { linkId: string; userId: string }): Promise<void>
 }
 
 export const createLinkRepository = (
@@ -166,6 +167,13 @@ export const createLinkRepository = (
         .limit(1)
 
       return userLink
+    },
+    async deleteForUser({ linkId, userId }) {
+      await db
+        .delete(linksUsers)
+        .where(
+          and(eq(linksUsers.linkId, linkId), eq(linksUsers.userId, userId)),
+        )
     },
   }
 }

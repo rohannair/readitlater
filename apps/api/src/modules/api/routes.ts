@@ -3,7 +3,7 @@ import type { Env } from '@/types'
 import { OpenAPIHono as Hono } from '@hono/zod-openapi'
 import { getCookie } from 'hono/cookie'
 import { logger } from 'hono/logger'
-import { getLink, getLinksByUser, queueScrape } from './handlers'
+import { deleteLink, getLink, getLinksByUser, queueScrape } from './handlers'
 
 export const apiRouter = new Hono<Env>()
   .use(logger())
@@ -23,6 +23,7 @@ export const apiRouter = new Hono<Env>()
   .route('/api/v1/links', queueScrape)
   .route('/api/v1/links', getLinksByUser)
   .route('/api/v1/links', getLink)
+  .route('/api/v1/links', deleteLink)
   .get('/api/v1/links/status', async (c) => {
     return c.json({ message: 'Status' })
   })
