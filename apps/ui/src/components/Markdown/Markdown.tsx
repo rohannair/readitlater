@@ -12,8 +12,8 @@ export function Markdown({
   return (
     <BaseMarkdown
       className={cn(
-        'col-span-8 prose dark:prose-invert prose-purple max-w-none',
-        'border-r border-muted pl-4 pt-6 pr-6 pb-10',
+        'prose dark:prose-invert prose-purple max-w-none',
+        'lg:col-span-8 lg:border-r border-muted lg:pl-4 lg:pt-6 lg:pr-6 lg:pb-10',
         'zwj-hide',
       )}
       // components={{ code }}

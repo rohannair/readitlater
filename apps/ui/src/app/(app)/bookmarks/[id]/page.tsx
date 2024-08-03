@@ -8,6 +8,7 @@ import { formatRelative } from 'date-fns'
 import { ArrowBigLeft } from 'lucide-react'
 import Link from 'next/link'
 import { Markdown } from '@/components/Markdown'
+import { LinkDisplay } from '@/components/LinkDisplay/LinkDisplay'
 
 export default async function BookmarkDetails({
   params: { id },
@@ -52,15 +53,7 @@ export default async function BookmarkDetails({
         </div>
       </section>
 
-      <section className="grid grid-cols-12 relative">
-        <Markdown>{cleaned}</Markdown>
-
-        <div className="col-span-4 flex flex-col gap-4 relative px-2 pt-6">
-          <div className="pr-4">
-            {summary ? <Summary summary={summary} /> : <Skeleton />}
-          </div>
-        </div>
-      </section>
+      <LinkDisplay summary={summary} cleaned={cleaned} />
     </div>
   )
 }

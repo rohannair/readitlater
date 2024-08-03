@@ -7,14 +7,14 @@ import {
   PaginationPrevious,
 } from '@/components/ui/pagination'
 import { LinkListActions } from '@/components/LinkList/LinkListActions'
-import { LinkListItem } from '@/components/LinkList/LinkListItem'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { SearchIcon } from 'lucide-react'
 import { cn, createPaginationQueryString } from '@/lib/utils'
 import type { LinkStatus } from '@/components/StatusIcon/StatusIcon'
+import { LinkItems } from '@/components/LinkList/LinkItems'
 
-interface Link {
+interface ILink {
   id: string
   title: string
   url: string
@@ -33,7 +33,7 @@ interface IPagination {
 }
 
 interface LinkListProps {
-  links: Link[]
+  links: ILink[]
   pagination: IPagination
 }
 
@@ -62,23 +62,11 @@ export async function LinkList({ links, pagination }: LinkListProps) {
           </div>
           <div className="grid gap-4">
             <div className="space-y-4">
-              {links.map((link) => (
-                <LinkListItem
-                  key={link.id}
-                  href={`/bookmarks/${link.id}`}
-                  title={link.title}
-                  url={link.url}
-                  imageUrl={link.imageUrl}
-                  summary={link.summary}
-                  tags={link.tags}
-                  createdAt={link.createdAt}
-                  status={link.status}
-                />
-              ))}
+              <LinkItems links={links} />
             </div>
           </div>
         </main>
-
+        {/* <LinkDrawer /> */}
         <aside className="flex my-4 mx-auto w-full justify-center">
           <Pagination>
             <PaginationContent>
