@@ -14,7 +14,6 @@ import { useState } from 'react'
 interface LinkItemsProps {
   links: {
     id: string
-    href: string
     prefetch?: boolean
     title: string
     url: string
@@ -44,7 +43,9 @@ export function LinkItems({ links }: LinkItemsProps) {
           <DrawerTrigger
             key={link.id}
             className={cn(
-              'grid grid-cols-12 w-full text-left gap-5 p-2 hover:shadow-md transition-shadow rounded-lg',
+              'flex flex-col gap-2 cursor-pointer w-full p-2',
+              'md:grid md:grid-cols-12 w-full text-left md:gap-5 md:p-4',
+              'hover:shadow-md transition-shadow rounded-lg',
               'dark:hover:bg-primary/2- dark:transition-colors',
               'ease-in-out duration-75 group',
             )}
@@ -62,12 +63,12 @@ export function LinkItems({ links }: LinkItemsProps) {
               )
             }}
           >
-            <section className="col-span-3 flex rounded-md overflow-hidden shadow-md">
+            <section className="w-full flex rounded-md shadow-sm md:col-span-3 md:overflow-hidden">
               <AspectRatio ratio={16 / 9} className="w-full">
                 <Image
                   src={
                     link.imageUrl ??
-                    'https://placehold.co/250x140/png?text=No+Image'
+                    'https://placehold.co/750x420/png?text=No+Image'
                   }
                   fill
                   className="object-cover"
@@ -75,14 +76,14 @@ export function LinkItems({ links }: LinkItemsProps) {
                 />
               </AspectRatio>
             </section>
-            <section className="col-span-8">
-              <div className="flex flex-row gap-1 items-baseline">
-                <h3 className="font-semibold text-lg truncate">
+            <section className="md:col-span-8 flex flex-col">
+              <div className="flex md:flex-row gap-1 items-baseline">
+                <h3 className="font-semibold text-2xl md:text-lg truncate text-wrap">
                   {link.title ?? link.url}
                 </h3>
-                <StatusIcon status={link.status} />
+                <StatusIcon className="" status={link.status} />
               </div>
-              <div className="text-sm text-muted-foreground">
+              <div className="text-sm text-muted-foreground text-wrap truncate">
                 {link.title ? link.url : null}
               </div>
               <div className="text-sm text-foreground">
@@ -105,6 +106,9 @@ export function LinkItems({ links }: LinkItemsProps) {
                 direction: direction || 'desc',
                 search: search || '',
               }).toString()}`,
+              {
+                scroll: false,
+              },
             )
           }}
         />

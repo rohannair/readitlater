@@ -60,13 +60,13 @@ export async function LinkList({ links, pagination }: LinkListProps) {
               Search
             </Button>
           </div>
-          <div className="grid gap-4">
+          <div className="md:grid md:gap-4">
             <div className="space-y-4">
               <LinkItems links={links} />
             </div>
           </div>
         </main>
-        {/* <LinkDrawer /> */}
+
         <aside className="flex my-4 mx-auto w-full justify-center">
           <Pagination>
             <PaginationContent>

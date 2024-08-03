@@ -42,7 +42,7 @@ export default async function BookmarkLayout({
   const { linksCount, categoriesCount, tagsCount } = await getLinksMetadata()
 
   return (
-    <div className="grid grid-cols-12 min-h-screen">
+    <div className="md:grid md:grid-cols-12 min-h-screen">
       <div className="flex flex-col col-span-2 border-r bg-secondary border-border p-4 relative">
         <div className="sticky top-4">
           <Heading>Links</Heading>

@@ -88,7 +88,6 @@ export const queueScrape = new OpenAPIHono<Env>().openapi(
   // @ts-ignore
   async (c) => {
     const { url } = c.req.valid('json')
-    const { retry } = c.req.valid('query')
 
     if (!c.var.user?.id) {
       return c.json({ message: 'Not logged in' }, 401)
@@ -115,7 +114,10 @@ export const queueScrape = new OpenAPIHono<Env>().openapi(
       return c.json({ message: 'Something went wrong' }, 400)
     }
 
-    if (retry || !link.summary) {
+    console.log('Link created', link)
+
+    if (!link.summary) {
+      console.log('Scraping website')
       await scrapeWebsite.trigger({
         url,
         link: link.id,

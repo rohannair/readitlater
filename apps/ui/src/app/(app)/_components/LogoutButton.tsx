@@ -9,16 +9,17 @@ import {
 import { cn } from '@/lib/utils'
 import { LogOut } from 'lucide-react'
 
-export const LogoutButton = () => {
+export const LogoutButton = ({ className }: { className: string }) => {
   return (
     <Tooltip>
       <TooltipTrigger asChild>
         <Button
           variant="ghost"
           onClick={() => {}}
-          className={
-            'flex px-3 py-4 items-center justify-center hover:bg-transparent'
-          }
+          className={cn(
+            'flex px-3 py-4 items-center justify-center hover:bg-transparent',
+            className,
+          )}
         >
           <LogOut className="size-[1.2rem]" />
         </Button>

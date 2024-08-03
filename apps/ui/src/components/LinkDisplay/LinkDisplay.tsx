@@ -9,11 +9,11 @@ interface LinkDisplayProps {
 
 export function LinkDisplay({ summary, cleaned }: LinkDisplayProps) {
   return (
-    <section className="flex flex-col relative lg:grid lg:grid-cols-12 ">
+    <section className="flex flex-col relative md:grid md:grid-cols-12">
       <Markdown>{cleaned}</Markdown>
 
-      <div className="order-first  flex flex-col gap-4 relative lg:order-last lg:col-span-4 lg:px-2 lg:pt-6">
-        <div className="lg:pr-4">
+      <div className="order-first flex flex-col gap-4 mb-4 relative md:order-last md:col-span-4 md:px-2 md:pt-6 md:mb-0">
+        <div className="md:pr-4">
           {summary ? <Summary summary={summary} /> : <Skeleton />}
         </div>
       </div>

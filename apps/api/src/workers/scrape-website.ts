@@ -14,6 +14,7 @@ interface ScrapeWebsiteParams {
 
 export async function scrape({ url, link }: ScrapeWebsiteParams) {
   const linkRepository = await createLinkRepository(db)
+  console.log(`Scraping ${url}`)
 
   const {
     data: { title, content: body },

@@ -50,11 +50,11 @@ export function LinkDrawer({ id, close }: LinkDrawerProps) {
 
   return link ? (
     <>
-      <DrawerHeader>
+      <DrawerHeader className="border-b border-border shadow-sm">
         <DrawerTitle>
           <div className="flex lg:flex-row">
-            <h3 className="text-left">{link?.title}</h3>
-            <div className="ml-auto flex flex-row gap-2">
+            <h3 className="text-left text-2xl md:text-lg">{link?.title}</h3>
+            <div className="ml-auto flex flex-row gap-2 ">
               <Button size="icon" variant="outline" asChild className="size-7">
                 <Link href={`/bookmarks/${link.id}`}>
                   <Expand className="h-4 w-4" />
@@ -90,7 +90,7 @@ export function LinkDrawer({ id, close }: LinkDrawerProps) {
           )}
         </DrawerDescription>
       </DrawerHeader>
-      <div className="py-4 px-10 max-h-96 overflow-y-scroll">
+      <div className="p-4 max-h-[67vh]  overflow-y-scroll">
         <LinkDisplay summary={link.summary} cleaned={link.cleaned} />
       </div>
       <DrawerFooter>
