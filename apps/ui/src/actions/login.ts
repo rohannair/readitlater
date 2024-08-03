@@ -21,8 +21,8 @@ export async function login({ email, password }: AuthParams) {
     throw new Error('Invalid email or password')
   }
 
-  const [key, value] = getCookieValue(res.headers, 'set-cookie')
-  cookies().set(key, value, { path: '/' })
+  const cookieOptions = getCookieValue(res.headers, 'set-cookie')
+  cookies().set(cookieOptions)
 
   return await res.json()
 }
@@ -40,6 +40,48 @@ function extractheaders(headers: Headers) {
   return headersObj
 }
 
+function parseAndSetCookie(cookieString: string) {
+  // Split the cookie string into individual parts
+  const parts = cookieString.split(';').map((part) => part.trim())
+
+  // Initialize an object to store cookie options
+  const cookieOptions: {
+    name: string
+    value: string
+    maxAge?: number
+    path?: string
+    httpOnly?: boolean
+    sameSite?: 'strict' | 'lax' | 'none'
+  } = {
+    name: '',
+    value: '',
+  }
+
+  // Parse each part of the cookie string
+  for (const part of parts) {
+    if (part.includes('=')) {
+      const [key, value] = part.split('=')
+      if (!cookieOptions.name) {
+        cookieOptions.name = key
+        cookieOptions.value = value
+      } else if (key.toLowerCase() === 'max-age') {
+        cookieOptions.maxAge = Number.parseInt(value)
+      } else if (key.toLowerCase() === 'path') {
+        cookieOptions.path = value
+      } else if (key.toLowerCase() === 'samesite') {
+        cookieOptions.sameSite = value.toLowerCase() as
+          | 'strict'
+          | 'lax'
+          | 'none'
+      }
+    } else if (part.toLowerCase() === 'httponly') {
+      cookieOptions.httpOnly = true
+    }
+  }
+
+  return cookieOptions
+}
+
 function getCookieValue(headers: Headers, key: string) {
-  return extractheaders(headers)[key].split('=')
+  return parseAndSetCookie(extractheaders(headers)[key])
 }
