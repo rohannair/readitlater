@@ -22,15 +22,14 @@ export const LinkListItem = (props: LinkListItemProps) => {
   return (
     <Link
       href={props.href}
-      className="grid group grid-cols-12 gap-5 p-2"
+      className="grid group grid-cols-12 gap-5 p-2 hover:shadow-md transition-shadow rounded-lg dark:hover:bg-primary/20 dark:transition-colors ease-in-out duration-75"
       prefetch={props.prefetch}
     >
-      <section className="col-span-3 flex border rounded-md overflow-hidden group-hover:border-muted-foreground">
+      <section className="col-span-3 flex  rounded-md overflow-hidden shadow-md">
         <AspectRatio ratio={16 / 9} className="w-full">
           <Image
             src={
-              props.imageUrl ??
-              '//placehold.co/250x167?text=No+Image&font=Source+Sans+Pro'
+              props.imageUrl ?? 'https://placehold.co/250x140/png?text=No+Image'
             }
             fill
             className="object-cover"

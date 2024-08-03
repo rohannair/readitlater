@@ -35,7 +35,7 @@ export const NavLink = ({
           href={href}
           className={cn(
             'flex px-3 py-4 items-center justify-center',
-            isActive && 'bg-gray-700 border-t border-gray-600',
+            isActive && ' bg-secondary border-t border-border',
           )}
         >
           <Icon className="size-[1.2rem]" />

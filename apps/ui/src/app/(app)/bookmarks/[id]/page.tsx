@@ -20,15 +20,20 @@ export default async function BookmarkDetails({
 
   return (
     <div className="min-h-screen flex flex-col relative">
-      <section className="sticky top-0 bg-background z-50 grid grid-cols-12 gap-2 border-b border-muted flex-grow">
-        <div className="flex col-span-1 px-4 flex-grow items-center justify-center w-full h-full">
-          <Button size="sm" variant="link" className="mt-2" asChild>
+      <section className="sticky top-0 left-0 shadow-sm right-0 bg-background z-50 flex flex-row gap-4 border-b border-muted flex-grow items-center">
+        <div className="flex items-center justify-center pl-4">
+          <Button
+            size="icon"
+            variant="outline"
+            className="mt-2 w-7 h-7"
+            asChild
+          >
             <Link href="/bookmarks">
-              <ArrowBigLeft size={16} className="mr-1" /> Back
+              <ArrowBigLeft className="h-4 w-4" />
             </Link>
           </Button>
         </div>
-        <div className="col-span-6 px-4 pt-3 py-2 flex flex-col">
+        <div className="flex-grow col-span-6 flex flex-col ">
           <h3 className="inline font-bold mb--2">{title}</h3>
           <a
             href={linkUrl}
@@ -42,7 +47,9 @@ export default async function BookmarkDetails({
             Last updated {formatRelative(new Date(updatedAt), new Date())}.
           </p>
         </div>
-        <ActionBar id={id} status={status} />
+        <div className="ml-auto">
+          <ActionBar id={id} status={status} />
+        </div>
       </section>
 
       <section className="grid grid-cols-12 relative">

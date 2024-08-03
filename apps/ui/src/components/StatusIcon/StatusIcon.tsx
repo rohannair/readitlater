@@ -1,9 +1,11 @@
 import { Tooltip, TooltipTrigger } from '@/components/ui/tooltip'
 import { TooltipContent } from '@radix-ui/react-tooltip'
 import {
+  CircleCheckBigIcon,
   CircleCheckIcon,
   CircleDashedIcon,
   CircleDotDashedIcon,
+  CircleGaugeIcon,
   CircleXIcon,
 } from 'lucide-react'
 import { match } from 'ts-pattern'
@@ -27,7 +29,7 @@ export function StatusIcon({ status }: { status: LinkStatus }) {
       <span className="text-yellow-500">
         <Tooltip>
           <TooltipTrigger>
-            <CircleDotDashedIcon className="size-3" />
+            <CircleGaugeIcon className="size-3" />
           </TooltipTrigger>
           <TooltipContent>
             <div className="text-xs mb-1">Processing</div>
@@ -39,7 +41,7 @@ export function StatusIcon({ status }: { status: LinkStatus }) {
       <span className="text-green-500">
         <Tooltip>
           <TooltipTrigger>
-            <CircleCheckIcon className="size-3" />
+            <CircleCheckBigIcon className="size-3" />
           </TooltipTrigger>
           <TooltipContent>
             <div className="text-xs mb-1">Completed</div>
