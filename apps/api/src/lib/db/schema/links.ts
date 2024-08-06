@@ -1,5 +1,5 @@
 import { categories, linksTags, linksUsers } from '@/lib/db/schema'
-import { relations } from 'drizzle-orm'
+import { relations, sql } from 'drizzle-orm'
 import { index, pgTable, text, timestamp, varchar } from 'drizzle-orm/pg-core'
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod'
 import type { z } from 'zod'
@@ -34,6 +34,13 @@ export const links = pgTable(
   },
   (t) => ({
     linkTitleIdx: index('link_title_idx').on(t.title),
+    searchIndex: index('search_index').using(
+      'gin',
+      sql`(
+          setweight(to_tsvector('english', ${t.title}), 'A') ||
+          setweight(to_tsvector('english', ${t.cleaned}), 'B')
+      )`,
+    ),
   }),
 )
 

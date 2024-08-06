@@ -1,8 +1,6 @@
-import { integer } from 'drizzle-orm/pg-core'
 import { type Link, links, linksUsers, users } from '@/lib/db/schema'
 import { stripQueryParams } from '@/lib/url'
 import { createId } from '@paralleldrive/cuid2'
-import { image } from '@tensorflow/tfjs-node'
 import { and, desc, eq, sql } from 'drizzle-orm'
 import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js'
 
@@ -10,6 +8,7 @@ interface LinkRepository {
   createLink(input: {
     url: string
     userId: string
+    title?: string
     imageUrl?: string
   }): Promise<Partial<Link>>
   updateLink(params: {
@@ -21,10 +20,11 @@ interface LinkRepository {
     status?: 'submitted' | 'processing' | 'completed' | 'error'
     statusReason?: string
   }): Promise<Link>
-  getAllForUser(
+  get(
     userId: string,
     page: number,
     pageSize: number,
+    query?: string,
   ): Promise<{
     links: Partial<Link>[] | undefined[]
     pagination: {
@@ -50,7 +50,7 @@ export const createLinkRepository = (
 ): LinkRepository => {
   const db = client ?? globalThis.db
   return {
-    async createLink({ url, userId, imageUrl }) {
+    async createLink({ url, userId, title, imageUrl }) {
       if (!url) {
         throw new Error('URL is required')
       }
@@ -61,6 +61,7 @@ export const createLinkRepository = (
           .values({
             id: createId(),
             url: stripQueryParams(url),
+            ...(title ? { title } : null),
             ...(imageUrl ? { imageUrl } : null),
           })
           .onConflictDoUpdate({
@@ -72,6 +73,7 @@ export const createLinkRepository = (
           .returning({
             id: links.id,
             url: links.url,
+            title: links.title,
             status: links.status,
           })
 
@@ -113,8 +115,14 @@ export const createLinkRepository = (
       return link
     },
 
-    async getAllForUser(userId, page = 1, pageSize = 10) {
+    // biome-ignore lint/style/useDefaultParameterLast: <explanation>
+    async get(userId, page = 1, pageSize = 10, query) {
       const offset = (page - 1) * pageSize
+
+      const matchQuery = sql`(
+          setweight(to_tsvector('english', ${links.title}), 'A') ||
+          setweight(to_tsvector('english', ${links.cleaned}), 'B')
+        ) @@ to_tsquery('english', ${query})`
 
       const results = await db
         .select({
@@ -128,7 +136,7 @@ export const createLinkRepository = (
         .from(links)
         .innerJoin(linksUsers, eq(links.id, linksUsers.linkId))
         .innerJoin(users, eq(linksUsers.userId, users.id))
-        .where(eq(users.id, userId))
+        .where(and(eq(users.id, userId), query ? matchQuery : undefined))
         .limit(pageSize)
         .offset(offset)
         .orderBy(desc(links.createdAt))

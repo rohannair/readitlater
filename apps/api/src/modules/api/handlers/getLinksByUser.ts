@@ -50,7 +50,7 @@ export const getLinksByUser = new OpenAPIHono<Env>().openapi(
         200,
       )
 
-    const { links, pagination } = await linkRepository.getAllForUser(
+    const { links, pagination } = await linkRepository.get(
       c.var.user?.id,
       page,
       pageSize,

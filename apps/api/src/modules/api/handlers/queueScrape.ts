@@ -33,6 +33,16 @@ export function parseScrapeResult(text: string): ParsedScrapeResult {
   return { title, metadata, body }
 }
 
+async function getImageMetadataFromOg({ url }: { url: string }) {
+  const { result } = await ogs({ url })
+  const imageUrl =
+    result.ogImage && result?.ogImage?.length > 0
+      ? result.ogImage[0].url
+      : undefined
+  const title = result.ogTitle
+  return { imageUrl, title }
+}
+
 export const queueScrape = new OpenAPIHono<Env>().openapi(
   createRoute({
     method: 'post',
@@ -97,24 +107,19 @@ export const queueScrape = new OpenAPIHono<Env>().openapi(
       return c.json({ message: 'This site is not yet supported' }, 400)
     }
 
-    const { result } = await ogs({ url })
-    const imageUrl =
-      result.ogImage && result?.ogImage?.length > 0
-        ? result.ogImage[0].url
-        : undefined
+    const { title, imageUrl } = await getImageMetadataFromOg({ url })
 
     const links = createLinkRepository()
     const link = await links.createLink({
       url,
       userId: c.var.user?.id,
+      title,
       imageUrl,
     })
 
     if (!link?.id) {
       return c.json({ message: 'Something went wrong' }, 400)
     }
-
-    console.log('Link created', link)
 
     if (!link.summary) {
       console.log('Scraping website')
