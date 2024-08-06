@@ -1,6 +1,12 @@
 import { categories, linksUsers, tags } from '@/lib/db/schema'
-import { relations } from 'drizzle-orm'
-import { index, pgTable, timestamp, varchar } from 'drizzle-orm/pg-core'
+import { relations, sql, type SQL } from 'drizzle-orm'
+import {
+  index,
+  pgTable,
+  timestamp,
+  varchar,
+  type AnyPgColumn,
+} from 'drizzle-orm/pg-core'
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod'
 import type { z } from 'zod'
 
@@ -26,9 +32,13 @@ export const users = pgTable(
     updatedAt: timestamp('updated_at').defaultNow().notNull(),
   },
   (t) => ({
-    userEmailIdx: index('user_email_idx').on(t.email),
+    userEmailIdx: index('user_email_idx').on(lower(t.email)),
   }),
 )
+
+export function lower(email: AnyPgColumn): SQL {
+  return sql`lower(${email})`
+}
 
 export const usersRelations = relations(users, ({ many }) => ({
   links: many(linksUsers),
