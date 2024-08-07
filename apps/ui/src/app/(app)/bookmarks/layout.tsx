@@ -4,6 +4,7 @@ import { DialogTrigger } from '@/components/ui/dialog'
 import { getLinksMetadata } from '@/lib/api/calls/getLinksMetadata'
 import { Boxes, Link as LinkIcon, Tags } from 'lucide-react'
 import Link from 'next/link'
+import posthog from 'posthog-js'
 
 function Heading({ children }: { children: string }) {
   return <h3 className="font-semibold mb-2">{children}</h3>

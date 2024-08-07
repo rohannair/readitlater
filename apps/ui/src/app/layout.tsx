@@ -1,3 +1,4 @@
+import { CSPostHogProvider } from '@/app/providers'
 import './globals.css'
 
 import { ThemeProvider } from '@/components/theme-provider'
@@ -27,24 +28,26 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={cn(
-          'min-h-screen bg-background font-sans antialiased overflow-y-scroll',
-          fontSans.variable,
-        )}
-      >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
+      <CSPostHogProvider>
+        <body
+          className={cn(
+            'min-h-screen bg-background font-sans antialiased overflow-y-scroll',
+            fontSans.variable,
+          )}
         >
-          <TooltipProvider delayDuration={200}>
-            <Dialog>{children}</Dialog>
-          </TooltipProvider>
-          <Toaster />
-        </ThemeProvider>
-      </body>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <TooltipProvider delayDuration={200}>
+              <Dialog>{children}</Dialog>
+            </TooltipProvider>
+            <Toaster />
+          </ThemeProvider>
+        </body>
+      </CSPostHogProvider>
     </html>
   )
 }

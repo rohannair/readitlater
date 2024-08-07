@@ -24,6 +24,7 @@ import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { useState } from 'react'
+import posthog from 'posthog-js'
 
 const linkCreateSchema = z.object({
   url: z.preprocess(
@@ -86,7 +87,15 @@ export const DialogLinkCreate = () => {
               <Button variant="link">Close</Button>
             </DialogClose>
             <DialogClose asChild>
-              <Button type="submit" disabled={isSubmitting}>
+              <Button
+                type="submit"
+                disabled={isSubmitting}
+                onClick={() => {
+                  posthog.capture('create_link_submission', {
+                    url: form.getValues().url,
+                  })
+                }}
+              >
                 {isSubmitting ? 'Submitting...' : 'Submit URL'}
               </Button>
             </DialogClose>

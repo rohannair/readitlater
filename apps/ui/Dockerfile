@@ -23,6 +23,5 @@ WORKDIR /app
 COPY --from=builder ./app/dist ./
 EXPOSE 3000
 
-
 # Command to run the app
 CMD ["bun", "run", "start"]
