@@ -1,5 +1,6 @@
 export * from './categories'
 export * from './links'
+export * from './linksCategories'
 export * from './linksTags'
 export * from './linksUsers'
 export * from './sessions'

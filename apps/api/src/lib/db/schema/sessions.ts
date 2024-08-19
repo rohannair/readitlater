@@ -1,6 +1,7 @@
 import { users } from '@/lib/db/schema/users'
 import { pgTable, timestamp, varchar } from 'drizzle-orm/pg-core'
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod'
+import type { z } from 'zod'
 
 export const sessions = pgTable('sessions', {
   id: varchar('id', {
@@ -18,3 +19,4 @@ export const sessions = pgTable('sessions', {
 
 export const insertSessionSchema = createInsertSchema(sessions)
 export const selectSessionSchema = createSelectSchema(sessions)
+export type Session = z.infer<typeof selectSessionSchema>

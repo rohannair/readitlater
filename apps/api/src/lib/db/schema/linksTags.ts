@@ -30,3 +30,4 @@ export const linksTagsRelations = relations(linksTags, ({ one }) => ({
 export const insertLinksTagsSchema = createInsertSchema(linksTags)
 export const selectLinksTagsSchema = createSelectSchema(linksTags)
 export type LinkTag = z.infer<typeof selectLinksTagsSchema>
+export type NewLinkTag = z.infer<typeof insertLinksTagsSchema>

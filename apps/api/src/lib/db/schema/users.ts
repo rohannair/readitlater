@@ -49,3 +49,4 @@ export const usersRelations = relations(users, ({ many }) => ({
 export const insertUserSchema = createInsertSchema(users)
 export const selectUserSchema = createSelectSchema(users)
 export type User = z.infer<typeof selectUserSchema>
+export type NewUser = z.infer<typeof insertUserSchema>
